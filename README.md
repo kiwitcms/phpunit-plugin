@@ -2,7 +2,18 @@
 
 ## Configuration and environment
 
-#### 1. Copy `kiwi.tcms.conf.dist` as `kiwi.tcms.conf` and configure
+#### 1. Install package
+Add
+```
+"minimum-stability": "dev",
+```
+to your composer.json and execute
+
+```
+composer require kiwitcms/phpunit-plugin
+```
+
+#### 2. Create `kiwi.tcms.conf` with the following contents:
 
 ```
 TCMS_URL =
@@ -11,15 +22,19 @@ TCMS_PASSWORD =
 TCMS_PRODUCT =
 TCMS_PRODUCT_VERSION =
 TCMS_BUILD =
+
+TCMS_VERIFY_SSL_CERTIFICATES = true
 ```
 
-You can set all of them as enviroment variables.
+Set the appropriate values.
 
-#### 2. Add listener configuration to phpunit.xml
+You can set all of them as environment variables.
+
+#### 3. Add listener configuration to phpunit.xml
 
 ```
 <listeners>
-    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="/PATH/TO/src/PHPUnit/PHPUnitTestListener.php">
+    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="vendor/kiwitcms/phpunit-plugin/src/PHPUnit/PHPUnitTestListener.php">
         <arguments>
             <!-- path relative to the working directory phpunit is executed from-->
             <string>kiwi.tcms.conf</string>
