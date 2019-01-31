@@ -1,6 +1,6 @@
-#PHPUnit plugin for Kiwi TCMS
+# PHPUnit plugin for Kiwi TCMS
 
-##Configuration and environment
+## Configuration and environment
 
 #### 1. Copy `kiwi.tcms.conf.dist` as `kiwi.tcms.conf` and configure
 
@@ -36,13 +36,10 @@ A new test run and test plan will be created on each run. You can set `TCMS_RUN_
 
 ### License
 
-Distributed under the terms of the `GNU GPL v3.0`_ license, "kiwitcms-phpunit-plugin" is free and open source software
+Distributed under the terms of the [`GNU GPL v3.0`](http://www.gnu.org/licenses/gpl-3.0.txt) license, "kiwitcms/phpunit-plugin" is free and open source software
 
 
-###Issues
+### Issues
 
-If you encounter any problems, please `file an issue`_ along with a detailed description.
-
-.. _`GNU GPL v3.0`: http://www.gnu.org/licenses/gpl-3.0.txt
-.. _`file an issue`: https://github.com/kiwitcms/phpunit-plugin/issues
+If you encounter any problems, please [file an issue](https://github.com/kiwitcms/phpunit-plugin/issues) along with a detailed description.
 
