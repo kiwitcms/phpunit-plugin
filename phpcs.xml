@@ -1,0 +1,8 @@
+<ruleset>
+	<rule ref="Generic.PHP.DisallowShortOpenTag"/>
+
+	<rule ref="PSR2" />
+
+	<file>src/</file>
+	<file>tests/</file>
+</ruleset>

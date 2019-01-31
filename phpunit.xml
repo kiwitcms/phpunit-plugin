@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit bootstrap="./vendor/autoload.php">
+    <testsuites>
+        <testsuite name="KiwiTCMS PHPUnit Plugin Test Suite">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+	<listeners>
+        <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="src/PHPUnit/PHPUnitTestListener.php">
+            <arguments>
+				<!-- path relative to the working directory phpunit is executed from-->
+                <string>kiwi.tcms.conf</string>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>

@@ -1,0 +1,15 @@
+parameters:
+	level:	max
+	paths:
+		-	%rootDir%/../../../src
+	excludes_analyse:
+		-	%rootDir%/vendor
+	ignoreErrors:
+		-
+			message: '#Cannot call method getRpcResult\(\) on Graze\\GuzzleHttp\\JsonRpc\\Message\\ResponseInterface|null.#'
+			path: %currentWorkingDirectory%/src/Api/JsonRpc/Factory/KiwiTCMSJsonRpcAuthenticatedClientFactory.php
+
+		-
+			message: '#Call to an undefined method PHPUnit\\Framework\\Test::getName\(\).#'
+			path: %currentWorkingDirectory%/src/PHPUnit/PHPUnitTestListener.php
+		-    '#Method [a-zA-Z0-9\\_\:\(\)]+ should return [a-zA-Z0-9\\_\|]+ but returns object.#'
