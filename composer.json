@@ -1,5 +1,6 @@
 {
     "name": "kiwitcms/phpunit-plugin",
+    "license": "GPL-3.0-only",
     "require": {
         "graze/guzzle-jsonrpc": "^3.2",
         "phpunit/phpunit": "^7.5",
@@ -19,6 +20,9 @@
         "psr-4": {
             "Tests\\": "tests/"
         }
+    },
+    "support": {
+        "issues": "https://github.com/kiwitcms/phpunit-plugin/issues"
     },
     "authors": [
         {
