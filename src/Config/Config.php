@@ -75,7 +75,7 @@ class Config implements ConfigInterface
     {
         $envVarValue = getenv($envVarName);
 
-        if ($envVarValue !== FALSE && $envVarValue !== "") {
+        if ($envVarValue !== false && $envVarValue !== "") {
             return $envVarValue;
         }
 
@@ -87,19 +87,19 @@ class Config implements ConfigInterface
         $alternativeEnvVarsNames = $this->getAlternativeEnvironmentVariableNames();
         $envVarsWithAlternatives = array_keys($alternativeEnvVarsNames);
 
-        if (!in_array($envVarName, $envVarsWithAlternatives)){
-            return FALSE;
+        if (!in_array($envVarName, $envVarsWithAlternatives)) {
+            return false;
         }
 
         foreach ($alternativeEnvVarsNames[$envVarName] as $alternativeEnvVarName) {
             $envVarValue = getenv($alternativeEnvVarName);
 
-            if ($envVarValue !== FALSE && $envVarValue !== "") {
+            if ($envVarValue !== false && $envVarValue !== "") {
                 return $envVarValue;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     private function loadConfigFromEnvironmentVariables()

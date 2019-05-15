@@ -157,8 +157,12 @@ class Client implements ClientInterface
 
             $testPlan = $this->testPlanRepository->findById($this->testRun->getPlanId());
 
-            $this->product = $this->productRepository->findById($testPlan->getProductId());
-            $this->category = $this->getFirstProductCategoryOrFail();
+            $product = $this->productRepository->findById($testPlan->getProductId());
+
+            if (!empty($product)) {
+                $this->product = $product;
+                $this->category = $this->getFirstProductCategoryOrFail();
+            }
         } else {
             $this->product = $this->getProductOrCreate();
             $this->category = $this->getFirstProductCategoryOrFail();
@@ -361,7 +365,10 @@ class Client implements ClientInterface
 
         foreach ($this->testResults as $testResultId => $testResult) {
             if (isset($existingTestCases[$testResultId])) {
-                $this->updateOrCreateTestExecution($existingTestCases[$testResultId], $testResult['testExecutionStatus']);
+                $this->updateOrCreateTestExecution(
+                    $existingTestCases[$testResultId],
+                    $testResult['testExecutionStatus']
+                );
             } else {
                 $this->createTestCaseAndTestExecution($testResult['testCase'], $testResult['testExecutionStatus']);
             }
