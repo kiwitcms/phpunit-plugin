@@ -25,7 +25,7 @@ class TestCaseRunRepository extends BaseRepository
 
     public function findByTestCaseIdAndTestRunId(int $testCaseId, int $testRunId): ?TestCaseRun
     {
-        $response = $this->client->send($this->client->request(123, 'TestCaseRun.filter', [(object) [
+        $response = $this->client->send($this->client->request(123, 'TestExecution.filter', [(object) [
             'case_id' => $testCaseId,
             'run_id' => $testRunId,
         ]]));
@@ -42,7 +42,7 @@ class TestCaseRunRepository extends BaseRepository
     public function updateStatus(int $testCaseRunId, int $statusId)
     {
         /** @var Response $response */
-        $response =  $this->client->send($this->client->request(123, 'TestCaseRun.update', [
+        $response =  $this->client->send($this->client->request(123, 'TestExecution.update', [
             'case_run_id' => $testCaseRunId,
             'values' => [
                 'case_run_status' => $statusId
@@ -59,7 +59,7 @@ class TestCaseRunRepository extends BaseRepository
         $modelData = $this->exportModel($model);
 
         /** @var Response $response */
-        $response = $this->client->send($this->client->request(123, 'TestCaseRun.create', [(object) $modelData]));
+        $response = $this->client->send($this->client->request(123, 'TestExecution.create', [(object) $modelData]));
 
         $result = $response->getRpcResult();
 
