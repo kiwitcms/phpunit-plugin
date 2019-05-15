@@ -8,7 +8,6 @@ use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 
 class ConfigTest extends TestCase
 {
-
     private $origEnv;
 
     public function setUp()
@@ -16,138 +15,105 @@ class ConfigTest extends TestCase
         parent::setUp();
         $this->origEnv = getenv();
         foreach ($this->origEnv as $envKey => $envVal) {
-            putenv($envKey . '=');
+            putenv($envKey.'=');
         }
+
+        $this->setOutputCallback(function () {
+        });
     }
 
     public function tearDown()
     {
         parent::tearDown();
         foreach ($this->origEnv as $envKey => $envVal) {
-            putenv($envKey . '=' . $envVal);
+            putenv($envKey.'='.$envVal);
         }
+    }
+
+    public function testMissingVars()
+    {
+        $this->expectException(ConfigException::class);
+
+        new Config('tests/fixtures/configuration/empty.conf');
+    }
+
+    public function testAllSet()
+    {
+        $config = new Config('tests/fixtures/configuration/all_set.conf');
+
+        $this->assertSame('localhost', $config->getUrl());
+        $this->assertSame('username', $config->getUsername());
+        $this->assertSame('password', $config->getPassword());
+        $this->assertSame('product', $config->getProductName());
+        $this->assertSame('version', $config->getProductVersion());
+        $this->assertSame('build', $config->getBuild());
+    }
+
+    public function testMissingConfigApiUrl()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_API_URL..*/');
+
+        new Config('tests/fixtures/configuration/missing_api_url.conf');
+    }
+
+    public function testMissingConfigUsername()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_USERNAME.*/');
+
+        new Config('tests/fixtures/configuration/missing_username.conf');
+    }
+
+    public function testMissingConfigPassword()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_PASSWORD.*/');
+
+        new Config('tests/fixtures/configuration/missing_password.conf');
+    }
+
+    public function testMissingConfigProduct()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_PRODUCT.*/');
+
+        new Config('tests/fixtures/configuration/missing_product.conf');
+    }
+
+    public function testMissingConfigProductVersion()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_PRODUCT_VERSION.*/');
+
+        new Config('tests/fixtures/configuration/missing_product_version.conf');
+    }
+
+    public function testMissingConfigBuild()
+    {
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/.*TCMS_BUILD.*/');
+
+        new Config('tests/fixtures/configuration/missing_build.conf');
     }
 
     public function testMissingEnvVars()
     {
         $this->expectException(ConfigException::class);
 
-        new Config('tests/fixtures/empty.conf');
+        new Config();
     }
 
-    public function testMissingUrl()
+    public function testEnvVarsSet()
     {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_URL.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testUrlSet()
-    {
-        putenv('TCMS_URL=something');
-
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_URL).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testMissingUsername()
-    {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_USERNAME.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testUsernameSet()
-    {
-        putenv('TCMS_USERNAME=something');
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_USERNAME).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testMissingPassword()
-    {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_PASSWORD.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testPasswordSet()
-    {
-        putenv('TCMS_PASSWORD=something');
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PASSWORD).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testMissingProduct()
-    {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_PRODUCT.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testTcmsProductSet()
-    {
-        putenv('TCMS_PRODUCT=something');
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT,).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testMissingProductVersion()
-    {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_PRODUCT_VERSION.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testTcmsProductVersionSet()
-    {
-        putenv('TCMS_PRODUCT_VERSION=something');
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT_VERSION).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testMissingBuild()
-    {
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*TCMS_BUILD.*/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testTcmsBuildSet()
-    {
-        putenv('TCMS_BUILD=something');
-        $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_BUILD).*$/');
-
-        new Config('tests/fixtures/empty.conf');
-    }
-
-    public function testTcmsEnvVarsSet()
-    {
-        putenv('TCMS_URL=url');
+        putenv('TCMS_API_URL=url');
         putenv('TCMS_USERNAME=username');
         putenv('TCMS_PASSWORD=password');
         putenv('TCMS_PRODUCT=product');
         putenv('TCMS_PRODUCT_VERSION=version');
         putenv('TCMS_BUILD=build');
 
-        $config = new Config('tests/fixtures/empty.conf');
+        $config = new Config();
 
         $this->assertSame('url', $config->getUrl());
         $this->assertSame('username', $config->getUsername());
@@ -155,5 +121,122 @@ class ConfigTest extends TestCase
         $this->assertSame('product', $config->getProductName());
         $this->assertSame('version', $config->getProductVersion());
         $this->assertSame('build', $config->getBuild());
+    }
+
+    public function testEnvApiUrlSet()
+    {
+        putenv('TCMS_API_URL=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_API_URL).*$/');
+
+        new Config();
+    }
+
+    public function testEnvUsernameSet()
+    {
+        putenv('TCMS_USERNAME=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_USERNAME).*$/');
+
+        new Config();
+    }
+
+    public function testEnvPasswordSet()
+    {
+        putenv('TCMS_PASSWORD=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PASSWORD).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductSet()
+    {
+        putenv('TCMS_PRODUCT=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT,).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductAlternativeTravisRepoSlugSet()
+    {
+        putenv('TRAVIS_REPO_SLUG=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT,).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductAlternativeJobNameSet()
+    {
+        putenv('JOB_NAME=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT,).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductVersionSet()
+    {
+        putenv('TCMS_PRODUCT_VERSION=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT_VERSION).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductVersionAlternativeTravisCommitSet()
+    {
+        putenv('TRAVIS_COMMIT=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT_VERSION).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductVersionAlternativeTravisPullRequestShaSet()
+    {
+        putenv('TRAVIS_PULL_REQUEST_SHA=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT_VERSION).*$/');
+
+        new Config();
+    }
+
+    public function testEnvProductVersionAlternativeGitCommitSet()
+    {
+        putenv('GIT_COMMIT=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_PRODUCT_VERSION).*$/');
+
+        new Config();
+    }
+
+    public function testEnvBuildSet()
+    {
+        putenv('TCMS_BUILD=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_BUILD).*$/');
+
+        new Config();
+    }
+
+    public function testEnvBuildAlternativeTravisBuildNumberSet()
+    {
+        putenv('TRAVIS_BUILD_NUMBER=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_BUILD).*$/');
+
+        new Config();
+    }
+
+    public function testEnvBuildAlternativeBuildNumberSet()
+    {
+        putenv('BUILD_NUMBER=something');
+        $this->expectException(ConfigException::class);
+        $this->expectExceptionMessageRegExp('/^(?!.*?TCMS_BUILD).*$/');
+
+        new Config();
     }
 }

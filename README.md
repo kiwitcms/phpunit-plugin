@@ -16,7 +16,7 @@ composer require kiwitcms/phpunit-plugin
 #### 2. Create `kiwi.tcms.conf` with the following contents:
 
 ```
-TCMS_URL =
+TCMS_API_URL =
 TCMS_USERNAME =
 TCMS_PASSWORD =
 TCMS_PRODUCT =
@@ -34,18 +34,13 @@ You can set all of them as environment variables.
 
 ```
 <listeners>
-    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="vendor/kiwitcms/phpunit-plugin/src/PHPUnit/PHPUnitTestListener.php">
-        <arguments>
-            <!-- path relative to the working directory phpunit is executed from-->
-            <string>kiwi.tcms.conf</string>
-        </arguments>
-    </listener>
+    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="src/PHPUnit/PHPUnitTestListener.php" />
 </listeners>
 ```
 
 ### Other
 
-If the product version or build do no exist, they will be created.
+If the product, product version or build do no exist, they will be created.
 
 A new test run and test plan will be created on each run. You can set `TCMS_RUN_ID` in the config file, if you want to update a single run.
 

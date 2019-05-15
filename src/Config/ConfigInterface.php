@@ -11,5 +11,5 @@ interface ConfigInterface
     public function getProductName();
     public function getProductVersion();
     public function getBuild();
-    public function getTestRunId(): int;
+    public function getTestRunId(): ?int;
 }

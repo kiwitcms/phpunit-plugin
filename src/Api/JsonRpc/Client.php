@@ -144,10 +144,26 @@ class Client implements ClientInterface
 
     public function init(): void
     {
-        $this->product = $this->getProductOrFail();
-        $this->category = $this->getFirstProductCategoryOrFail();
         $this->user = $this->getUserOrFail();
-        $this->testRun = $this->getTestRunOrCreate();
+
+        if (!empty($this->config->getTestRunId())) {
+            $testRun = $this->testRunRepository->findById($this->config->getTestRunId());
+
+            if (empty($testRun)) {
+                throw new ClientException(sprintf("Test run with id %d not found!", $this->config->getTestRunId()));
+            }
+
+            $this->testRun = $testRun;
+
+            $testPlan = $this->testPlanRepository->findById($this->testRun->getPlanId());
+
+            $this->product = $this->productRepository->findById($testPlan->getProductId());
+            $this->category = $this->getFirstProductCategoryOrFail();
+        } else {
+            $this->product = $this->getProductOrCreate();
+            $this->category = $this->getFirstProductCategoryOrFail();
+            $this->testRun = $this->createTestRun();
+        }
     }
 
     public function finish(): void
@@ -167,15 +183,25 @@ class Client implements ClientInterface
         return $user;
     }
 
-    public function getProductOrFail(): Product
+    public function getProductOrCreate(): Product
     {
         $product = $this->productRepository->findByName($this->config->getProductName());
 
         if (empty($product)) {
-            throw new ClientException("Product not found!");
+            return $this->createProduct();
         }
 
         return $product;
+    }
+
+    public function createProduct(): Product
+    {
+        $product = new Product();
+        $product->setName($this->config->getProductName());
+        $product->setClassificationId(1);
+        $product->setDescription("");
+
+        return $this->productRepository->create($product);
     }
 
     public function getFirstProductCategoryOrFail(): Category
@@ -221,20 +247,11 @@ class Client implements ClientInterface
         $testPlan->setTypeId(1);
         $testPlan->setProductVersionId($productVersion->getId());
         $testPlan->setText("WIP");
-        $testPlan->setName('Auto Test Plan ' . date('Y-m-d H:i:s'));
+
+        $testPlanName = sprintf('Automated test plan for %s', $this->product->getName());
+        $testPlan->setName($testPlanName);
 
         return $this->testPlanRepository->create($testPlan);
-    }
-
-    public function getTestRunOrCreate(): TestRun
-    {
-        $testRun = $this->testRunRepository->findById($this->config->getTestRunId());
-
-        if (empty($testRun)) {
-            return $this->createTestRun();
-        }
-
-        return $testRun;
     }
 
     public function createTestRun(): TestRun
@@ -246,7 +263,7 @@ class Client implements ClientInterface
         $testRun->setBuildId($build->getBuildId());
         $testRun->setPlanId($testPlan->getPlanId());
         $testRun->setManagerId($this->user->getId());
-        $testRun->setSummary('Auto Test Run ' . date('Y-m-d H:i:s'));
+        $testRun->setSummary('Automated test run ' . date('Y-m-d H:i:s'));
 
         return $this->testRunRepository->create($testRun);
     }
@@ -335,6 +352,10 @@ class Client implements ClientInterface
 
     private function addTestResultsToTestRun()
     {
+        if (empty($this->testRun)) {
+            return;
+        }
+
         /** TestCase[] $existingTestCases */
         $existingTestCases = $this->testCaseRepository->findByTestRunId($this->testRun->getRunId());
 

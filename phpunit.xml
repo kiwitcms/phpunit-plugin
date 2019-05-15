@@ -7,11 +7,6 @@
     </testsuites>
 
     <listeners>
-        <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="src/PHPUnit/PHPUnitTestListener.php">
-            <arguments>
-                <!-- path relative to the working directory phpunit is executed from-->
-                <string>kiwi.tcms.conf</string>
-            </arguments>
-        </listener>
+        <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="src/PHPUnit/PHPUnitTestListener.php" />
     </listeners>
 </phpunit>

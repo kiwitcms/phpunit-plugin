@@ -24,4 +24,28 @@ class ProductRepository extends BaseRepository
 
         return $this->hydrateModel($result[0]);
     }
+
+    public function create(Product $model): Product
+    {
+        $modelData = $this->exportModel($model);
+
+        /** @var Response $response */
+        $response = $this->client->send($this->client->request(123, 'Product.create', [(object) $modelData]));
+
+        $result = $response->getRpcResult();
+
+        return $this->hydrateModel($result);
+    }
+
+    public function findById(int $productId): ?Product
+    {
+        $response = $this->client->send($this->client->request(123, 'Product.filter', [(object)['id' => $productId]]));
+        /** @var Response $response */
+        $result = $response->getRpcResult();
+        if (empty($result)) {
+            return null;
+        }
+
+        return $this->hydrateModel($result[0]);
+    }
 }

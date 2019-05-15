@@ -4,30 +4,125 @@ namespace KiwiTcmsPhpUnitPlugin\Config;
 
 use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
 use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
-use Dotenv\Dotenv;
+use M1\Env\Parser;
 
 class Config implements ConfigInterface
 {
+    /**
+     * @var string
+     */
+    private $pluginName;
 
-    public function __construct($configFile)
+    /**
+     * @var array
+     */
+    private $config;
+
+    public function __construct(?string $configFilePath = null)
     {
-        $configFilePath = getcwd() . DIRECTORY_SEPARATOR . $configFile;
-        $configPathInfo = pathinfo($configFilePath);
+        $this->pluginName = 'KiwiTCMS Plugin';
 
-        try {
-            $dotenv = Dotenv::create($configPathInfo['dirname'], $configPathInfo['basename']);
-            $dotenv->load();
-        } catch (\Exception $e) {
-            throw new ConfigException($e->getMessage());
+        $this->config = $this->getDefaultConfig();
+
+        if ($configFilePath && is_file($configFilePath)) {
+            $configText = $this->loadConfigFromFile($configFilePath);
+        } else {
+            $configText = $this->loadConfigFromEnvironmentVariables();
         }
 
-        $this->stopIfEmptyEnvVars();
+        $this->config = array_merge($this->config, Parser::parse($configText));
+
+        $this->stopIfEmptyConfigParameter();
     }
 
-    private function stopIfEmptyEnvVars()
+    private function getDefaultConfig(): array
     {
-        $requiredEnvVars = [
-            'TCMS_URL',
+        return [
+            'TCMS_API_URL' => null,
+            'TCMS_USERNAME' => null,
+            'TCMS_PASSWORD' => null,
+            'TCMS_PRODUCT' => null,
+            'TCMS_PRODUCT_VERSION' => null,
+            'TCMS_BUILD' => null,
+            'TCMS_VERIFY_SSL_CERTIFICATES' => true,
+            'TCMS_RUN_ID' => null,
+        ];
+    }
+
+    private function getAlternativeEnvironmentVariableNames(): array
+    {
+        return [
+            'TCMS_PRODUCT' => [
+                'TRAVIS_REPO_SLUG', 'JOB_NAME'
+            ],
+            'TCMS_PRODUCT_VERSION' => [
+                'TRAVIS_COMMIT', 'TRAVIS_PULL_REQUEST_SHA', 'GIT_COMMIT'
+            ],
+            'TCMS_BUILD' => [
+                'TRAVIS_BUILD_NUMBER', 'BUILD_NUMBER'
+            ],
+        ];
+    }
+
+    private function loadConfigFromFile($configFilePath)
+    {
+        printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
+
+        return file_get_contents($configFilePath);
+    }
+
+    private function getEnvVarValue(string $envVarName)
+    {
+        $envVarValue = getenv($envVarName);
+
+        if ($envVarValue !== FALSE && $envVarValue !== "") {
+            return $envVarValue;
+        }
+
+        return $this->getEnvVarAlternativeNameValue($envVarName);
+    }
+
+    private function getEnvVarAlternativeNameValue(string $envVarName)
+    {
+        $alternativeEnvVarsNames = $this->getAlternativeEnvironmentVariableNames();
+        $envVarsWithAlternatives = array_keys($alternativeEnvVarsNames);
+
+        if (!in_array($envVarName, $envVarsWithAlternatives)){
+            return FALSE;
+        }
+
+        foreach ($alternativeEnvVarsNames[$envVarName] as $alternativeEnvVarName) {
+            $envVarValue = getenv($alternativeEnvVarName);
+
+            if ($envVarValue !== FALSE && $envVarValue !== "") {
+                return $envVarValue;
+            }
+        }
+
+        return FALSE;
+    }
+
+    private function loadConfigFromEnvironmentVariables()
+    {
+        $configText = '';
+        $envVars = array_keys($this->getDefaultConfig());
+
+        foreach ($envVars as $envVarName) {
+            $envVarValue = $this->getEnvVarValue($envVarName);
+            if ($envVarValue === false) {
+                continue;
+            }
+
+            $configText .= sprintf("%s=%s\n", $envVarName, $envVarValue);
+        }
+
+        return $configText;
+    }
+
+    private function stopIfEmptyConfigParameter()
+    {
+        $requiredParameters = [
+            'TCMS_API_URL',
             'TCMS_USERNAME',
             'TCMS_PASSWORD',
             'TCMS_PRODUCT',
@@ -35,55 +130,57 @@ class Config implements ConfigInterface
             'TCMS_BUILD',
         ];
 
-        $envVarsNotSet = [];
-        foreach ($requiredEnvVars as $value) {
-            if (empty(getenv($value))) {
-                $envVarsNotSet[] = $value;
+        $parametersNotSet = [];
+        foreach ($requiredParameters as $parameter) {
+            if (empty($this->config[$parameter])) {
+                $parametersNotSet[] = $parameter;
             }
         }
 
-        if (!empty($envVarsNotSet)) {
-            throw new ConfigException(implode(', ', $envVarsNotSet) . " are not set.");
+        if (!empty($parametersNotSet)) {
+            $msg = count($parametersNotSet) === 1 ? " is not set." : " are not set.";
+            $fullMsg = sprintf("%s: %s %s\n", $this->pluginName, implode(', ', $parametersNotSet), $msg);
+            throw new ConfigException($fullMsg);
         }
     }
 
-    public function getUrl()
+    public function getUrl(): string
     {
-        return getenv('TCMS_URL');
+        return $this->config['TCMS_API_URL'];
     }
 
-    public function getUsername()
+    public function getUsername(): string
     {
-        return getenv('TCMS_USERNAME');
+        return $this->config['TCMS_USERNAME'];
     }
 
-    public function getPassword()
+    public function getPassword(): string
     {
-        return getenv('TCMS_PASSWORD');
+        return $this->config['TCMS_PASSWORD'];
     }
 
-    public function getVerifySslCertificates()
+    public function getVerifySslCertificates(): bool
     {
-        return getenv('TCMS_VERIFY_SSL_CERTIFICATES') ?: false;
+        return $this->config['TCMS_VERIFY_SSL_CERTIFICATES'];
     }
 
-    public function getProductName()
+    public function getProductName(): string
     {
-        return getenv('TRAVIS_REPO_SLUG') ? : getenv('TCMS_PRODUCT');
+        return $this->config['TCMS_PRODUCT'];
     }
 
-    public function getProductVersion()
+    public function getProductVersion(): string
     {
-        return getenv('TRAVIS_COMMIT') ? : getenv('TCMS_PRODUCT_VERSION');
+        return $this->config['TCMS_PRODUCT_VERSION'];
     }
 
-    public function getBuild()
+    public function getBuild(): string
     {
-        return getenv('TRAVIS_BUILD_NUMBER') ? : getenv('TCMS_BUILD');
+        return $this->config['TCMS_BUILD'];
     }
 
-    public function getTestRunId(): int
+    public function getTestRunId(): ?int
     {
-        return (int) getenv('TCMS_RUN_ID');
+        return $this->config['TCMS_RUN_ID'];
     }
 }

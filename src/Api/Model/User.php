@@ -2,7 +2,6 @@
 
 namespace KiwiTcmsPhpUnitPlugin\Api\Model;
 
-use KiwiTcmsPhpUnitPlugin\Api\Model\BaseModel;
 use DateTime;
 
 class User extends BaseModel
@@ -67,7 +66,7 @@ class User extends BaseModel
         $this->id = $value;
     }
 
-    public function getLastLogin(): ?DateTime
+    public function getLastLogin(): ? DateTime
     {
         return $this->lastLogin;
     }
@@ -77,7 +76,7 @@ class User extends BaseModel
         $this->lastLogin = $value;
     }
 
-    public function getIsSuperuser(): ?bool
+    public function getIsSuperuser() : ? bool
     {
         return $this->isSuperuser;
     }
@@ -87,7 +86,7 @@ class User extends BaseModel
         $this->isSuperuser = $value;
     }
 
-    public function getUsername(): ?string
+    public function getUsername() : ? string
     {
         return $this->username;
     }
@@ -97,7 +96,7 @@ class User extends BaseModel
         $this->username = $value;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstName() : ? string
     {
         return $this->firstName;
     }
@@ -107,7 +106,7 @@ class User extends BaseModel
         $this->firstName = $value;
     }
 
-    public function getLastName(): ?string
+    public function getLastName() : ? string
     {
         return $this->lastName;
     }
@@ -117,7 +116,7 @@ class User extends BaseModel
         $this->lastName = $value;
     }
 
-    public function getEmail(): ?string
+    public function getEmail() : ? string
     {
         return $this->email;
     }
@@ -127,7 +126,7 @@ class User extends BaseModel
         $this->email = $value;
     }
 
-    public function getIsStaff(): ?bool
+    public function getIsStaff() : ? bool
     {
         return $this->isStaff;
     }
@@ -137,7 +136,7 @@ class User extends BaseModel
         $this->isStaff = $value;
     }
 
-    public function getIsActive(): ?bool
+    public function getIsActive() : ? bool
     {
         return $this->isActive;
     }
@@ -147,7 +146,7 @@ class User extends BaseModel
         $this->isActive = $value;
     }
 
-    public function getDateJoined(): ?DateTime
+    public function getDateJoined() : ? DateTime
     {
         return $this->dateJoined;
     }

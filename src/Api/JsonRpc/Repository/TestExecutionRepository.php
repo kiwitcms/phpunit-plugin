@@ -45,7 +45,7 @@ class TestExecutionRepository extends BaseRepository
         $response =  $this->client->send($this->client->request(123, 'TestExecution.update', [
             'case_run_id' => $testExecutionId,
             'values' => [
-                'case_run_status' => $statusId
+                'status' => $statusId
             ]
         ]));
 

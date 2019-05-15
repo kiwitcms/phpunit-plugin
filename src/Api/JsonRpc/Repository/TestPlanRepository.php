@@ -50,4 +50,19 @@ class TestPlanRepository extends BaseRepository
             'plan_id' => $testPlanId,
         ]));
     }
+
+    public function findById(int $testPlanId)
+    {
+        $response = $this->client->send($this->client->request(123, 'TestPlan.filter', [(object)[
+            'plan_id'   =>    $testPlanId,
+        ]]));
+
+        /** @var Response $response */
+        $result = $response->getRpcResult();
+        if (empty($result)) {
+            return null;
+        }
+
+        return $this->hydrateModel($result[0]);
+    }
 }

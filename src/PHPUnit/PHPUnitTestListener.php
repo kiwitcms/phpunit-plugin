@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestSuite;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Warning;
 use KiwiTcmsPhpUnitPlugin\Config\Config;
+use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
+use KiwiTcmsPhpUnitPlugin\Api\ClientException;
 
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory\KiwiTCMSJsonRpcAuthenticatedClientFactory;
 
@@ -14,16 +16,31 @@ class PHPUnitTestListener implements TestListener
 {
     protected $kiwiTcmsClient;
 
-    public function __construct(string $configFile)
+    public function __construct()
     {
-        $config = new Config($configFile);
+        $configFilePath = getcwd() . DIRECTORY_SEPARATOR . '.tcms.conf';
+        try {
+            $config = new Config($configFilePath);
+        } catch (ConfigException $e) {
+            printf($e->getMessage());
+            exit(1);
+        }
+
         $this->kiwiTcmsClient = KiwiTCMSJsonRpcAuthenticatedClientFactory::create($config);
-        $this->kiwiTcmsClient->init();
+
+        try {
+            $this->kiwiTcmsClient->init();
+        } catch (ClientException $e) {
+            printf($e->getMessage());
+            exit(1);
+        }
     }
 
     public function __destruct()
     {
-        $this->kiwiTcmsClient->finish();
+        if ($this->kiwiTcmsClient) {
+            $this->kiwiTcmsClient->finish();
+        }
     }
 
     public function addError(Test $test, \Throwable $t, float $time): void
