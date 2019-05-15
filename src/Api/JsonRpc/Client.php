@@ -13,13 +13,13 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestRunRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\BuildRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestCaseRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\CategoryRepository;
-use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestCaseRunRepository;
+use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestExecutionRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\UserRepository;
 use KiwiTcmsPhpUnitPlugin\Api\Model\ProductVersion;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestPlan;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestRun;
 use KiwiTcmsPhpUnitPlugin\Api\Model\Build;
-use KiwiTcmsPhpUnitPlugin\Api\Model\TestCaseRun;
+use KiwiTcmsPhpUnitPlugin\Api\Model\TestExecution;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestCase;
 use KiwiTcmsPhpUnitPlugin\Api\Model\Product;
 use KiwiTcmsPhpUnitPlugin\Api\Model\User;
@@ -74,9 +74,9 @@ class Client implements ClientInterface
     private $categoryRepository;
 
     /**
-     * @var TestCaseRunRepository
+     * @var TestExecutionRepository
      */
-    private $testCaseRunRepository;
+    private $testExecutionRepository;
 
     /**
      * @var UserRepository
@@ -118,7 +118,7 @@ class Client implements ClientInterface
         BuildRepository $buildRepository,
         TestCaseRepository $testCaseRepository,
         CategoryRepository $categoryRepository,
-        TestCaseRunRepository $testCaseRunRepository,
+        TestExecutionRepository $testExecutionRepository,
         UserRepository $userRepository
     ) {
         $this->client = $client;
@@ -131,7 +131,7 @@ class Client implements ClientInterface
         $this->buildRepository = $buildRepository;
         $this->testCaseRepository = $testCaseRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->testCaseRunRepository = $testCaseRunRepository;
+        $this->testExecutionRepository = $testExecutionRepository;
         $this->userRepository = $userRepository;
 
         $this->testResults = [];
@@ -290,47 +290,47 @@ class Client implements ClientInterface
 
             $this->testResults[$testResultId] = [
                 'testCase' => $testCase,
-                'testCaseRunStatus' => $this->getCaseRunStatusIdByResult($result)
+                'testExecutionStatus' => $this->getCaseRunStatusIdByResult($result)
             ];
         }
     }
 
-    public function createTestCaseRun(int $testCaseId, int $statusId): TestCaseRun
+    public function createTestExecution(int $testCaseId, int $statusId): TestExecution
     {
-        $testCaseRun = new TestCaseRun();
-        $testCaseRun->setRunId($this->testRun->getRunId());
-        $testCaseRun->setCaseId($testCaseId);
-        $testCaseRun->setBuildId($this->testRun->getBuildId());
+        $testExecution = new TestExecution();
+        $testExecution->setRunId($this->testRun->getRunId());
+        $testExecution->setCaseId($testCaseId);
+        $testExecution->setBuildId($this->testRun->getBuildId());
 
-        $testCaseRun = $this->testCaseRunRepository->create($testCaseRun);
+        $testExecution = $this->testExecutionRepository->create($testExecution);
 
-        return $this->testCaseRunRepository->updateStatus(
-            $testCaseRun->getCaseRunId(),
+        return $this->testExecutionRepository->updateStatus(
+            $testExecution->getCaseRunId(),
             $statusId
         );
     }
 
-    private function updateOrCreateTestCaseRun(TestCase $existingTestCase, int $statusId)
+    private function updateOrCreateTestExecution(TestCase $existingTestCase, int $statusId)
     {
-        $testCaseRun = $this->testCaseRunRepository->findByTestCaseIdAndTestRunId(
+        $testExecution = $this->testExecutionRepository->findByTestCaseIdAndTestRunId(
             $existingTestCase->getCaseId(),
             $this->testRun->getRunId()
         );
 
-        if ($testCaseRun) {
-            $this->testCaseRunRepository->updateStatus($testCaseRun->getCaseRunId(), $statusId);
+        if ($testExecution) {
+            $this->testExecutionRepository->updateStatus($testExecution->getCaseRunId(), $statusId);
         } else {
-            $testCaseRun = $this->createTestCaseRun($existingTestCase->getCaseId(), $statusId);
+            $testExecution = $this->createTestExecution($existingTestCase->getCaseId(), $statusId);
         }
     }
 
-    private function createTestCaseAndTestCaseRun(TestCase $newTestCase, int $statusId)
+    private function createTestCaseAndTestExecution(TestCase $newTestCase, int $statusId)
     {
         $testCase = $this->testCaseRepository->createModel($newTestCase);
 
         $this->testPlanRepository->addTestCase($this->testRun->getPlanId(), $testCase->getCaseId());
 
-        $this->createTestCaseRun($testCase->getCaseId(), $statusId);
+        $this->createTestExecution($testCase->getCaseId(), $statusId);
     }
 
     private function addTestResultsToTestRun()
@@ -340,9 +340,9 @@ class Client implements ClientInterface
 
         foreach ($this->testResults as $testResultId => $testResult) {
             if (isset($existingTestCases[$testResultId])) {
-                $this->updateOrCreateTestCaseRun($existingTestCases[$testResultId], $testResult['testCaseRunStatus']);
+                $this->updateOrCreateTestExecution($existingTestCases[$testResultId], $testResult['testExecutionStatus']);
             } else {
-                $this->createTestCaseAndTestCaseRun($testResult['testCase'], $testResult['testCaseRunStatus']);
+                $this->createTestCaseAndTestExecution($testResult['testCase'], $testResult['testExecutionStatus']);
             }
         }
     }

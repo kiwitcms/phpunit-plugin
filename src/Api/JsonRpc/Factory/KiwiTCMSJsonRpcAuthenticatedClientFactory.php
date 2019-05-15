@@ -14,7 +14,7 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestRunRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\BuildRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestCaseRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\CategoryRepository;
-use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestCaseRunRepository;
+use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestExecutionRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\UserRepository;
 
 class KiwiTCMSJsonRpcAuthenticatedClientFactory implements KiwiTCMSClientFactoryInterface
@@ -45,7 +45,7 @@ class KiwiTCMSJsonRpcAuthenticatedClientFactory implements KiwiTCMSClientFactory
             new BuildRepository($guzzleJsonRpcAuthenticatedClient),
             new TestCaseRepository($guzzleJsonRpcAuthenticatedClient),
             new CategoryRepository($guzzleJsonRpcAuthenticatedClient),
-            new TestCaseRunRepository($guzzleJsonRpcAuthenticatedClient),
+            new TestExecutionRepository($guzzleJsonRpcAuthenticatedClient),
             new UserRepository($guzzleJsonRpcAuthenticatedClient)
         );
 
