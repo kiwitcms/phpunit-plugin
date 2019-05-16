@@ -1,5 +1,7 @@
 # PHPUnit plugin for Kiwi TCMS
 
+[![Build Status](https://travis-ci.org/kiwitcms/phpunit-plugin.svg?branch=master)](https://travis-ci.org/kiwitcms/phpunit-plugin)
+
 ## Configuration and environment
 
 #### 1. Install package
