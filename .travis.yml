@@ -6,11 +6,10 @@ php:
 
 install:
   - composer install
-  - |
-        echo "[tcms]" > ~/.tcms.conf
-        echo "url = https://tcms.kiwitcms.org/xml-rpc/" >> ~/.tcms.conf
-        echo "username = kiwitcms-bot" >> ~/.tcms.conf
-        echo "password = $TCMS_PASSWORD" >> ~/.tcms.conf
+  - echo "[tcms]" > ~/.tcms.conf
+  - echo "url = https://tcms.kiwitcms.org/xml-rpc/" >> ~/.tcms.conf
+  - echo "username = kiwitcms-bot" >> ~/.tcms.conf
+  - echo "password = $TCMS_PASSWORD" >> ~/.tcms.conf
 
 script:
 - ./vendor/bin/phpunit
