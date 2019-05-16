@@ -1,9 +1,11 @@
-TCMS_API_URL =
-TCMS_USERNAME =
-TCMS_PASSWORD =
-TCMS_PRODUCT =
-TCMS_PRODUCT_VERSION =
-TCMS_BUILD =
+[tcms]
+url =
+username =
+password =
 
-TCMS_VERIFY_SSL_CERTIFICATES = true
-TCMS_RUN_ID =
+product =
+product_version =
+build =
+
+verify_ssl_certificates = false
+run_id =

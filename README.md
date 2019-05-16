@@ -13,7 +13,24 @@ to your composer.json and execute
 composer require kiwitcms/phpunit-plugin
 ```
 
-#### 2. Create `kiwi.tcms.conf` with the following contents:
+#### 2. Create `.tcms.conf` with the following contents:
+
+```
+[tcms]
+url =
+username =
+password =
+
+product =
+product_version =
+build =
+
+verify_ssl_certificates = true
+```
+
+Set the appropriate values.
+
+You can set all of them as environment variables (config file values have precedence):
 
 ```
 TCMS_API_URL =
@@ -22,19 +39,15 @@ TCMS_PASSWORD =
 TCMS_PRODUCT =
 TCMS_PRODUCT_VERSION =
 TCMS_BUILD =
-
-TCMS_VERIFY_SSL_CERTIFICATES = true
+TCMS_VERIFY_SSL_CERTIFICATES =
+TCMS_RUN_ID =
 ```
-
-Set the appropriate values.
-
-You can set all of them as environment variables.
 
 #### 3. Add listener configuration to phpunit.xml
 
 ```
 <listeners>
-    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="src/PHPUnit/PHPUnitTestListener.php" />
+    <listener class="\KiwiTcmsPhpUnitPlugin\PHPUnit\PHPUnitTestListener" file="vendor/kiwitcms/phpunit-plugin/src/PHPUnit/PHPUnitTestListener.php" />
 </listeners>
 ```
 
@@ -42,7 +55,7 @@ You can set all of them as environment variables.
 
 If the product, product version or build do no exist, they will be created.
 
-A new test run and test plan will be created on each run. You can set `TCMS_RUN_ID` in the config file, if you want to update a single run.
+A new test run and test plan will be created on each run. You can set `run_id` in the config file or `TCMS_RUN_ID` env var, if you want to update a single run.
 
 ### License
 
