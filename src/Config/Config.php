@@ -48,7 +48,8 @@ class Config implements ConfigInterface
         ];
     }
 
-    private function applyConfigFileValuesToConfig(array $config, ?string $configFilePath = null): array {
+    private function applyConfigFileValuesToConfig(array $config, ?string $configFilePath = null): array
+    {
         printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
 
         if (!$configFilePath || !is_file($configFilePath)) {
@@ -68,7 +69,8 @@ class Config implements ConfigInterface
         return $config;
     }
 
-    private function applyEnvironmentValuesToConfig(array $config): array {
+    private function applyEnvironmentValuesToConfig(array $config): array
+    {
         printf("%s: Loading configuration from environment...\n", $this->pluginName);
 
         $configOptionsEnvVarsNames = $this->getEnvironmentVariableNames();
@@ -82,7 +84,11 @@ class Config implements ConfigInterface
                 $envVarValue = getenv($envVar);
 
                 if ($envVarValue !== false && $envVarValue !== "") {
-                    $config[$configOption] = $envVarValue;
+                    if ($configOption === 'verify_ssl_certificates') {
+                        $config[$configOption] = strcasecmp("true", $envVarValue) === 0 ? true : false;
+                    } else {
+                        $config[$configOption] = $envVarValue;
+                    }
                 }
             }
         }
