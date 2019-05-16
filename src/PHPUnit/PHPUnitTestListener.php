@@ -15,6 +15,7 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory\KiwiTCMSJsonRpcAuthenticatedClient
 class PHPUnitTestListener implements TestListener
 {
     protected $kiwiTcmsClient;
+    private $testStartTime;
 
     public function __construct()
     {
@@ -49,7 +50,8 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'ERROR',
             get_class($test),
-            "Error: " . $t->getMessage() . "\n\n" . $t->getFile() . ':' . $t->getLine()
+            "Error: " . $t->getMessage() . "\n\n" . $t->getFile() . ':' . $t->getLine(),
+            $this->getExecutionTime()
         );
     }
 
@@ -59,7 +61,8 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'WARNING',
             get_class($test),
-            "Warning: " . $e->getMessage() . "\n\n" . $e->getFile() . ':' . $e->getLine()
+            "Warning: " . $e->getMessage() . "\n\n" . $e->getFile() . ':' . $e->getLine(),
+            $this->getExecutionTime()
         );
     }
 
@@ -69,7 +72,8 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'FAIL',
             get_class($test),
-            "Failure: " . $e->getMessage() . "\n\n" . $e->getFile() . ':' . $e->getLine()
+            "Failure: " . $e->getMessage() . "\n\n" . $e->getFile() . ':' . $e->getLine(),
+            $this->getExecutionTime()
         );
     }
 
@@ -79,7 +83,8 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'INCOMPLETE',
             get_class($test),
-            "Incomplete: " . $t->getMessage()
+            "Incomplete: " . $t->getMessage(),
+            $this->getExecutionTime()
         );
     }
 
@@ -89,7 +94,8 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'RISKY',
             get_class($test),
-            "Risky: " . $t->getMessage()
+            "Risky: " . $t->getMessage(),
+            $this->getExecutionTime()
         );
     }
 
@@ -99,12 +105,14 @@ class PHPUnitTestListener implements TestListener
             $test->getName(),
             'SKIPPED',
             get_class($test),
-            "Skipped: " . $t->getMessage()
+            "Skipped: " . $t->getMessage(),
+            $this->getExecutionTime()
         );
     }
 
     public function startTest(Test $test): void
     {
+        $this->testStartTime = microtime(true);
     }
 
     public function endTest(Test $test, float $time): void
@@ -112,7 +120,9 @@ class PHPUnitTestListener implements TestListener
         $this->kiwiTcmsClient->addTestResult(
             $test->getName(),
             'PASS',
-            get_class($test)
+            get_class($test),
+            "",
+            $this->getExecutionTime()
         );
     }
 
@@ -122,5 +132,10 @@ class PHPUnitTestListener implements TestListener
 
     public function endTestSuite(TestSuite $suite): void
     {
+    }
+
+    private function getExecutionTime()
+    {
+        return microtime(true) - $this->testStartTime;
     }
 }

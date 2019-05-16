@@ -295,7 +295,7 @@ class Client implements ClientInterface
         return $this->buildRepository->create($build);
     }
 
-    public function addTestResult($name, $result, $containingClass, $exception = "")
+    public function addTestResult($name, $result, $containingClass, $text = "", $executionTime = null)
     {
         $summary = $containingClass . '::' . $name;
         $testResultId = md5($containingClass . '::' . $name);
@@ -311,7 +311,9 @@ class Client implements ClientInterface
 
             $this->testResults[$testResultId] = [
                 'testCase' => $testCase,
-                'testExecutionStatus' => $this->getCaseRunStatusIdByResult($result)
+                'testExecutionStatusId' => $this->getCaseRunStatusIdByResult($result),
+                'testExecutionTime' => $executionTime,
+                'testExecutionText' => $text,
             ];
         }
     }
@@ -331,7 +333,7 @@ class Client implements ClientInterface
         );
     }
 
-    private function updateOrCreateTestExecution(TestCase $existingTestCase, int $statusId)
+    private function updateOrCreateTestExecution(TestCase $existingTestCase, int $statusId): TestExecution
     {
         $testExecution = $this->testExecutionRepository->findByTestCaseIdAndTestRunId(
             $existingTestCase->getCaseId(),
@@ -343,15 +345,29 @@ class Client implements ClientInterface
         } else {
             $testExecution = $this->createTestExecution($existingTestCase->getCaseId(), $statusId);
         }
+
+        return $testExecution;
     }
 
-    private function createTestCaseAndTestExecution(TestCase $newTestCase, int $statusId)
+    private function createTestCaseAndTestExecution(TestCase $newTestCase, int $statusId): TestExecution
     {
         $testCase = $this->testCaseRepository->createModel($newTestCase);
 
         $this->testPlanRepository->addTestCase($this->testRun->getPlanId(), $testCase->getCaseId());
 
-        $this->createTestExecution($testCase->getCaseId(), $statusId);
+        $testExecution = $this->createTestExecution($testCase->getCaseId(), $statusId);
+
+        return $testExecution;
+    }
+
+    private function createTextExecutionComment(
+        TestExecution $testExecution,
+        string $executionText,
+        float $executionTime
+    ) {
+        $executionTimeStr = sprintf("Execution time: %fs\n\n", $executionTime);
+        $executionText = $executionTimeStr . $executionText;
+        $this->testExecutionRepository->addComment($testExecution->getCaseRunId(), $executionText);
     }
 
     private function addTestResultsToTestRun()
@@ -364,14 +380,24 @@ class Client implements ClientInterface
         $existingTestCases = $this->testCaseRepository->findByTestRunId($this->testRun->getRunId());
 
         foreach ($this->testResults as $testResultId => $testResult) {
+            $testExecution = null;
             if (isset($existingTestCases[$testResultId])) {
-                $this->updateOrCreateTestExecution(
+                $testExecution = $this->updateOrCreateTestExecution(
                     $existingTestCases[$testResultId],
-                    $testResult['testExecutionStatus']
+                    $testResult['testExecutionStatusId']
                 );
             } else {
-                $this->createTestCaseAndTestExecution($testResult['testCase'], $testResult['testExecutionStatus']);
+                $testExecution = $this->createTestCaseAndTestExecution(
+                    $testResult['testCase'],
+                    $testResult['testExecutionStatusId']
+                );
             }
+
+            $this->createTextExecutionComment(
+                $testExecution,
+                $testResult['testExecutionText'],
+                $testResult['testExecutionTime']
+            );
         }
     }
 

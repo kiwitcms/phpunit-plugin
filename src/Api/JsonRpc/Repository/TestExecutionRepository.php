@@ -67,4 +67,13 @@ class TestExecutionRepository extends BaseRepository
 
         return $newModel;
     }
+
+    public function addComment(int $testExecutionId, string $comment)
+    {
+        /** @var Response $response */
+        $this->client->send($this->client->request(123, 'TestExecution.add_comment', [
+            'case_run_id' => $testExecutionId,
+            'comment' => $comment
+        ]));
+    }
 }
