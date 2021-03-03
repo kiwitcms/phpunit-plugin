@@ -295,7 +295,7 @@ class Client implements ClientInterface
     public function createBuild(): Build
     {
         $build = new Build();
-        $build->setProductId($this->product->getId());
+        $build->setVersion($this->version->getId());
         $build->setName($this->config->getBuild());
 
         return $this->buildRepository->create($build);
