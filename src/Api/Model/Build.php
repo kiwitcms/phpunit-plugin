@@ -61,13 +61,13 @@ class Build extends BaseModel
         $this->description = $value;
     }
 
-    public function getProductId(): ?int
+    public function getVersion(): ?int
     {
-        return $this->productId;
+        return $this->version;
     }
 
-    public function setProductId(int $value)
+    public function setVersion(int $value)
     {
-        $this->productId = $value;
+        $this->version = $value;
     }
 }
