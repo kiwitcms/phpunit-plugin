@@ -10,7 +10,7 @@ class TestPlan extends BaseModel
     /**
      * @var int
      */
-    private $planId;
+    private $id;
 
     /**
      * @var string
@@ -77,7 +77,7 @@ class TestPlan extends BaseModel
 
     public function getPlanId(): int
     {
-        return $this->planId;
+        return $this->id;
     }
 
     public function setPlanId(int $value)

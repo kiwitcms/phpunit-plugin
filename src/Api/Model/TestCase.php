@@ -10,7 +10,7 @@ class TestCase extends BaseModel
     /**
      * @var int
      */
-    private $caseId;
+    private $id;
 
     /**
      * @var DateTime
@@ -60,7 +60,7 @@ class TestCase extends BaseModel
     /**
      * @var int
      */
-    private $caseStatusId;
+    private $case_status;
 
     /**
      * @var int
@@ -75,7 +75,7 @@ class TestCase extends BaseModel
     /**
      * @var int
      */
-    private $authorId;
+    private $author;
 
     /**
      * @var int
@@ -118,12 +118,12 @@ class TestCase extends BaseModel
 
     public function getCaseId(): int
     {
-        return $this->caseId;
+        return $this->id;
     }
 
     public function setCaseId(int $value)
     {
-        $this->caseId = $value;
+        $this->id = $value;
     }
 
     public function getCreateDate(): ?DateTime
@@ -218,12 +218,12 @@ class TestCase extends BaseModel
 
     public function getCaseStatusId(): ?int
     {
-        return $this->caseStatusId;
+        return $this->case_status;
     }
 
     public function setCaseStatusId(int $value)
     {
-        $this->caseStatusId = $value;
+        $this->case_status = $value;
     }
 
     public function getCategoryId(): ?int
@@ -248,12 +248,12 @@ class TestCase extends BaseModel
 
     public function getAuthorId(): ?int
     {
-        return $this->authorId;
+        return $this->author;
     }
 
     public function setAuthorId(int $value)
     {
-        $this->authorId = $value;
+        $this->author = $value;
     }
 
     public function getDefaultTesterId(): ?int

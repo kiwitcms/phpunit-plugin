@@ -108,6 +108,11 @@ class Client implements ClientInterface
      */
     private $category;
 
+    /**
+     * @var ProductVersion
+     */
+    private $version;
+
     public function __construct(
         GuzzleJsonRpcClient $client,
         ConfigInterface $config,
@@ -165,6 +170,7 @@ class Client implements ClientInterface
             }
         } else {
             $this->product = $this->getProductOrCreate();
+            $this->version = $this->getProductVersionOrCreate();
             $this->category = $this->getFirstProductCategoryOrFail();
             $this->testRun = $this->createTestRun();
         }
@@ -202,7 +208,7 @@ class Client implements ClientInterface
     {
         $product = new Product();
         $product->setName($this->config->getProductName());
-        $product->setClassificationId(1);
+        $product->setClassification(1);
         $product->setDescription("");
 
         return $this->productRepository->create($product);
@@ -275,7 +281,7 @@ class Client implements ClientInterface
     public function getBuildOrCreate(): Build
     {
         $build = $this->buildRepository->findByProductIdAndBuild(
-            $this->product->getId(),
+            $this->version->getId(),
             $this->config->getBuild()
         );
 
@@ -301,6 +307,7 @@ class Client implements ClientInterface
         $testResultId = md5($containingClass . '::' . $name);
         if (!isset($this->testResults[$testResultId])) {
             $testCase = new TestCase();
+
             $testCase->setCategoryId($this->category->getId());
             $testCase->setProductId($this->product->getId());
             $testCase->setSummary($summary);
@@ -328,7 +335,7 @@ class Client implements ClientInterface
         $testExecution = $this->testExecutionRepository->create($testExecution);
 
         return $this->testExecutionRepository->updateStatus(
-            $testExecution->getCaseRunId(),
+            $testExecution->getId(),
             $statusId
         );
     }
@@ -341,7 +348,7 @@ class Client implements ClientInterface
         );
 
         if ($testExecution) {
-            $this->testExecutionRepository->updateStatus($testExecution->getCaseRunId(), $statusId);
+            $this->testExecutionRepository->updateStatus($testExecution->getId(), $statusId);
         } else {
             $testExecution = $this->createTestExecution($existingTestCase->getCaseId(), $statusId);
         }
@@ -367,7 +374,7 @@ class Client implements ClientInterface
     ) {
         $executionTimeStr = sprintf("Execution time: %fs\n\n", $executionTime);
         $executionText = $executionTimeStr . $executionText;
-        $this->testExecutionRepository->addComment($testExecution->getCaseRunId(), $executionText);
+        $this->testExecutionRepository->addComment($testExecution->getId(), $executionText);
     }
 
     private function addTestResultsToTestRun()

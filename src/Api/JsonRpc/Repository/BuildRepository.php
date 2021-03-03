@@ -16,15 +16,15 @@ class BuildRepository extends BaseRepository
     public function __construct(\Graze\GuzzleHttp\JsonRpc\Client $client)
     {
         parent::__construct($client, [
-            'productId' => 'product',
+            'versionId' => 'version',
         ]);
     }
 
-    public function findByProductIdAndBuild(int $productId, string $build): ?Build
+    public function findByProductIdAndBuild(int $versionId, string $build): ?Build
     {
         $response = $this->client->send($this->client->request(123, 'Build.filter', [(object)[
             'name' => $build,
-            'product' => $productId,
+            'version' => $versionId,
         ]]));
 
         /** @var Response $response */

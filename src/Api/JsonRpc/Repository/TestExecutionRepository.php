@@ -43,7 +43,7 @@ class TestExecutionRepository extends BaseRepository
     {
         /** @var Response $response */
         $response =  $this->client->send($this->client->request(123, 'TestExecution.update', [
-            'case_run_id' => $testExecutionId,
+            'execution_id' => $testExecutionId,
             'values' => [
                 'status' => $statusId
             ]
@@ -59,7 +59,10 @@ class TestExecutionRepository extends BaseRepository
         $modelData = $this->exportModel($model);
 
         /** @var Response $response */
-        $response = $this->client->send($this->client->request(123, 'TestExecution.create', [(object) $modelData]));
+        $response = $this->client->send($this->client->request(123, 'TestRun.add_case', [
+            'case_id' => $modelData['case'],
+            'run_id' => $modelData['run']
+        ]));
 
         $result = $response->getRpcResult();
 
@@ -72,7 +75,7 @@ class TestExecutionRepository extends BaseRepository
     {
         /** @var Response $response */
         $this->client->send($this->client->request(123, 'TestExecution.add_comment', [
-            'case_run_id' => $testExecutionId,
+            'execution_id' => $testExecutionId,
             'comment' => $comment
         ]));
     }

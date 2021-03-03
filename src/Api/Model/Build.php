@@ -9,7 +9,7 @@ class Build extends BaseModel
     /**
      * @var int
      */
-    private $buildId;
+    private $id;
 
     /**
      * @var string
@@ -24,7 +24,7 @@ class Build extends BaseModel
     /**
      * @var int
      */
-    private $productId;
+    private $version;
 
     public function __construct()
     {
@@ -33,7 +33,7 @@ class Build extends BaseModel
 
     public function getBuildId(): int
     {
-        return $this->buildId;
+        return $this->id;
     }
 
     public function setBuildId(int $value)
