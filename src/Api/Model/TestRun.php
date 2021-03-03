@@ -10,7 +10,7 @@ class TestRun extends BaseModel
     /**
      * @var int
      */
-    private $runId;
+    private $id;
 
     /**
      * @var int
@@ -40,12 +40,12 @@ class TestRun extends BaseModel
     /**
      * @var int
      */
-    private $planId;
+    private $plan;
 
     /**
      * @var int
      */
-    private $buildId;
+    private $build;
 
     /**
      * @var int
@@ -70,7 +70,7 @@ class TestRun extends BaseModel
 
     public function getRunId(): int
     {
-        return $this->runId;
+        return $this->id;
     }
 
     public function setRunId(int $value)
@@ -130,12 +130,12 @@ class TestRun extends BaseModel
 
     public function getPlanId(): int
     {
-        return $this->planId;
+        return $this->plan;
     }
 
     public function setPlanId(int $value)
     {
-        $this->planId = $value;
+        $this->plan = $value;
     }
 
     public function getTags(): array
@@ -150,12 +150,12 @@ class TestRun extends BaseModel
 
     public function getBuildId(): int
     {
-        return $this->buildId;
+        return $this->build;
     }
 
     public function setBuildId(int $value)
     {
-        $this->buildId = $value;
+        $this->build = $value;
     }
 
     public function getManagerId(): ?int

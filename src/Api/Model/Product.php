@@ -24,7 +24,7 @@ class Product extends BaseModel
     /**
      * @var int
      */
-    private $classificationId;
+    private $classification;
 
     public function getId(): int
     {
@@ -56,13 +56,13 @@ class Product extends BaseModel
         $this->description = $value;
     }
 
-    public function getClassificationId(): ?int
+    public function getClassification(): ?int
     {
-        return $this->classificationId;
+        return $this->classification;
     }
 
-    public function setClassificationId(int $value)
+    public function setClassification(int $value)
     {
-        $this->classificationId = $value;
+        $this->classification = $value;
     }
 }
