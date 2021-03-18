@@ -2,6 +2,7 @@
 
 namespace KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory;
 
+use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ClassificationRepository;
 use KiwiTcmsPhpUnitPlugin\Api\KiwiTCMSClientFactoryInterface;
 use KiwiTcmsPhpUnitPlugin\Api\ClientInterface;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Client;
@@ -46,7 +47,8 @@ class KiwiTCMSJsonRpcAuthenticatedClientFactory implements KiwiTCMSClientFactory
             new TestCaseRepository($guzzleJsonRpcAuthenticatedClient),
             new CategoryRepository($guzzleJsonRpcAuthenticatedClient),
             new TestExecutionRepository($guzzleJsonRpcAuthenticatedClient),
-            new UserRepository($guzzleJsonRpcAuthenticatedClient)
+            new UserRepository($guzzleJsonRpcAuthenticatedClient),
+            new ClassificationRepository($guzzleJsonRpcAuthenticatedClient)
         );
 
         return $client;

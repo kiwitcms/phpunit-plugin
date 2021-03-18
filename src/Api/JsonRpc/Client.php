@@ -4,6 +4,8 @@ namespace KiwiTcmsPhpUnitPlugin\Api\JsonRpc;
 
 use Graze\GuzzleHttp\JsonRpc\Client as GuzzleJsonRpcClient;
 use KiwiTcmsPhpUnitPlugin\Api\ClientInterface;
+use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ClassificationRepository;
+use KiwiTcmsPhpUnitPlugin\Api\Model\Classification;
 use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
 use KiwiTcmsPhpUnitPlugin\Api\ClientException;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ProductRepository;
@@ -79,6 +81,11 @@ class Client implements ClientInterface
     private $testExecutionRepository;
 
     /**
+     * @var ClassificationRepository
+     */
+    private $classificationRepository;
+
+    /**
      * @var UserRepository
      */
     private $userRepository;
@@ -113,6 +120,11 @@ class Client implements ClientInterface
      */
     private $version;
 
+    /**
+     * @var Classification
+     */
+    private $classification;
+
     public function __construct(
         GuzzleJsonRpcClient $client,
         ConfigInterface $config,
@@ -124,7 +136,8 @@ class Client implements ClientInterface
         TestCaseRepository $testCaseRepository,
         CategoryRepository $categoryRepository,
         TestExecutionRepository $testExecutionRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        ClassificationRepository $classificationRepository
     ) {
         $this->client = $client;
         $this->config = $config;
@@ -138,6 +151,7 @@ class Client implements ClientInterface
         $this->categoryRepository = $categoryRepository;
         $this->testExecutionRepository = $testExecutionRepository;
         $this->userRepository = $userRepository;
+        $this->classificationRepository = $classificationRepository;
 
         $this->testResults = [];
     }
@@ -158,6 +172,12 @@ class Client implements ClientInterface
                 throw new ClientException(sprintf("Test run with id %d not found!", $this->config->getTestRunId()));
             }
 
+            $this->classification = $this->getClassification();
+
+            if (!empty($this->classification)) {
+                throw new ClientException(sprintf("Missing classification"));
+            }
+
             $this->testRun = $testRun;
 
             $testPlan = $this->testPlanRepository->findById($this->testRun->getPlanId());
@@ -169,6 +189,7 @@ class Client implements ClientInterface
                 $this->category = $this->getFirstProductCategoryOrFail();
             }
         } else {
+            $this->classification = $this->getClassification();
             $this->product = $this->getProductOrCreate();
             $this->version = $this->getProductVersionOrCreate();
             $this->category = $this->getFirstProductCategoryOrFail();
@@ -193,6 +214,16 @@ class Client implements ClientInterface
         return $user;
     }
 
+    public function getClassification(): Classification
+    {
+        $classification = $this->classificationRepository->findFirst();
+        if (empty($classification)) {
+            throw new ClientException(sprintf("Missing classification"));
+        }
+
+        return $classification;
+    }
+
     public function getProductOrCreate(): Product
     {
         $product = $this->productRepository->findByName($this->config->getProductName());
@@ -208,7 +239,7 @@ class Client implements ClientInterface
     {
         $product = new Product();
         $product->setName($this->config->getProductName());
-        $product->setClassification(1);
+        $product->setClassification($this->classification->getId());
         $product->setDescription("");
 
         return $this->productRepository->create($product);
