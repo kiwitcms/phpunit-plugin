@@ -27,10 +27,6 @@ class Config implements ConfigInterface
 
         $this->config = $this->applyEnvironmentValuesToConfig($this->config);
 
-        if ($this->config['verify_ssl_certificates'] === null) {
-            $this->config['verify_ssl_certificates'] = true;
-        }
-
         $this->stopIfEmptyConfigParameter();
     }
 
@@ -43,7 +39,6 @@ class Config implements ConfigInterface
             'product' => null,
             'product_version' => null,
             'build' => null,
-            'verify_ssl_certificates' => null,
             'run_id' => null,
         ];
     }
@@ -84,11 +79,7 @@ class Config implements ConfigInterface
                 $envVarValue = getenv($envVar);
 
                 if ($envVarValue !== false && $envVarValue !== "") {
-                    if ($configOption === 'verify_ssl_certificates') {
-                        $config[$configOption] = strcasecmp("true", $envVarValue) === 0 ? true : false;
-                    } else {
-                        $config[$configOption] = $envVarValue;
-                    }
+                    $config[$configOption] = $envVarValue;
                 }
             }
         }
@@ -111,7 +102,6 @@ class Config implements ConfigInterface
             'build' => [
                 'TCMS_BUILD', 'TRAVIS_BUILD_NUMBER', 'BUILD_NUMBER'
             ],
-            'verify_ssl_certificates' => ['TCMS_VERIFY_SSL_CERTIFICATES'],
             'run_id' => ['TCMS_RUN_ID'],
         ];
     }
@@ -154,11 +144,6 @@ class Config implements ConfigInterface
     public function getPassword(): string
     {
         return $this->config['password'];
-    }
-
-    public function getVerifySslCertificates(): bool
-    {
-        return $this->config['verify_ssl_certificates'];
     }
 
     public function getProductName(): string

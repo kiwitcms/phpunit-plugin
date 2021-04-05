@@ -7,7 +7,6 @@ interface ConfigInterface
     public function getUrl();
     public function getUsername();
     public function getPassword();
-    public function getVerifySslCertificates();
     public function getProductName();
     public function getProductVersion();
     public function getBuild();

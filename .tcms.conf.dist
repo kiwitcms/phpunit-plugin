@@ -7,5 +7,4 @@ product =
 product_version =
 build =
 
-verify_ssl_certificates = false
 run_id =
