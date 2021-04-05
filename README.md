@@ -30,7 +30,6 @@ product =
 product_version =
 build =
 
-verify_ssl_certificates = true
 ```
 
 Set the appropriate values.
@@ -44,7 +43,6 @@ TCMS_PASSWORD =
 TCMS_PRODUCT =
 TCMS_PRODUCT_VERSION =
 TCMS_BUILD =
-TCMS_VERIFY_SSL_CERTIFICATES =
 TCMS_RUN_ID =
 ```
 

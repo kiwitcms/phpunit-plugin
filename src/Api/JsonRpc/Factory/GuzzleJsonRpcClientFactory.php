@@ -12,7 +12,7 @@ class GuzzleJsonRpcClientFactory
         $jsonRpcUrl = rtrim($config->getUrl(), "/") . '/json-rpc/';
 
         $guzzleJsonRpcClient = GuzzleJsonRpcClient::factory($jsonRpcUrl, [
-            'verify' => $config->getVerifySslCertificates() === true ?: false,
+            'verify' => true,
             'rpc_error' => true,
             'headers' => $headers,
         ]);
