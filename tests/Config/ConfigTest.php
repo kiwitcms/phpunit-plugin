@@ -15,7 +15,7 @@ class ConfigTest extends TestCase
         parent::setUp();
         $this->origEnv = getenv();
         foreach ($this->origEnv as $envKey => $envVal) {
-            putenv($envKey.'=');
+            putenv($envKey . '=');
         }
 
         $this->setOutputCallback(function () {
@@ -26,7 +26,7 @@ class ConfigTest extends TestCase
     {
         parent::tearDown();
         foreach ($this->origEnv as $envKey => $envVal) {
-            putenv($envKey.'='.$envVal);
+            putenv($envKey . '=' . $envVal);
         }
     }
 
