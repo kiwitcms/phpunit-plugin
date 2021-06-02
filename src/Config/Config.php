@@ -7,6 +7,12 @@ use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 
 class Config implements ConfigInterface
 {
+
+    /**
+     * @var string
+     */
+    const DEFAULT_CONF_FILENAME = '.tcms.conf';
+
     /**
      * @var string
      */
@@ -46,9 +52,12 @@ class Config implements ConfigInterface
     private function applyConfigFileValuesToConfig(array $config, ?string $configFilePath = null): array
     {
         if (!$configFilePath || !is_file($configFilePath)) {
-            return $config;
+            // fallback to /etc/tcms.conf
+            $configFilePath = sprintf('/etc/%s', trim(self::DEFAULT_CONF_FILENAME, '.'));
+            if (!is_file($configFilePath)) {
+                return $config;
+            }
         }
-        
         printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
 
         $configFileValues = parse_ini_file($configFilePath, true, INI_SCANNER_TYPED);
