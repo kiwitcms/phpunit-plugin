@@ -28,18 +28,26 @@ class ConfigTest extends TestCase
         foreach ($this->origEnv as $envKey => $envVal) {
             putenv($envKey . '=' . $envVal);
         }
+
+        $config = Config::getDefaultConfFilename();
+        if (file_exists($config)) {
+            unlink($config);
+        }
     }
 
     public function testMissingVars()
     {
         $this->expectException(ConfigException::class);
 
-        new Config('tests/fixtures/configuration/empty.conf');
+        $this->createConfigFile('tests/fixtures/configuration/empty.conf');
+
+        new Config();
     }
 
     public function testAllSet()
     {
-        $config = new Config('tests/fixtures/configuration/all_set.conf');
+        $this->createConfigFile('tests/fixtures/configuration/all_set.conf');
+        $config = new Config();
 
         $this->assertSame('localhost', $config->getUrl());
         $this->assertSame('username', $config->getUsername());
@@ -53,6 +61,7 @@ class ConfigTest extends TestCase
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*url..*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_api_url.conf');
 
         new Config('tests/fixtures/configuration/missing_api_url.conf');
     }
@@ -61,40 +70,45 @@ class ConfigTest extends TestCase
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*username.*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_username.conf');
 
-        new Config('tests/fixtures/configuration/missing_username.conf');
+        new Config();
     }
 
     public function testMissingConfigPassword()
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*password.*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_password.conf');
 
-        new Config('tests/fixtures/configuration/missing_password.conf');
+        new Config();
     }
 
     public function testMissingConfigProduct()
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*product.*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_product.conf');
 
-        new Config('tests/fixtures/configuration/missing_product.conf');
+        new Config();
     }
 
     public function testMissingConfigProductVersion()
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*product_version.*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_product_version.conf');
 
-        new Config('tests/fixtures/configuration/missing_product_version.conf');
+        new Config();
     }
 
     public function testMissingConfigBuild()
     {
         $this->expectException(ConfigException::class);
         $this->expectExceptionMessageRegExp('/.*build.*/');
+        $this->createConfigFile('tests/fixtures/configuration/missing_build.conf');
 
-        new Config('tests/fixtures/configuration/missing_build.conf');
+        new Config();
     }
 
     public function testMissingEnvVars()
@@ -238,5 +252,15 @@ class ConfigTest extends TestCase
         $this->expectExceptionMessageRegExp('/^(?!.*?build).*$/');
 
         new Config();
+    }
+
+    private function createConfigFile(string $source)
+    {
+        $target = Config::getDefaultConfFilename();
+        if (file_exists($target)) {
+            unlink($target);
+        }
+
+        copy($source, $target);
     }
 }
