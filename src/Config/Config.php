@@ -7,6 +7,12 @@ use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 
 class Config implements ConfigInterface
 {
+
+    /**
+     * @var string
+     */
+    const DEFAULT_CONF_FILENAME = '.tcms.conf';
+
     /**
      * @var string
      */
@@ -17,17 +23,22 @@ class Config implements ConfigInterface
      */
     private $config;
 
-    public function __construct(?string $configFilePath = null)
+    public function __construct()
     {
-        $this->pluginName = 'KiwiTCMS Plugin';
+        $this->pluginName = 'Kiwi TCMS Plugin';
 
         $this->config = $this->getDefaultConfig();
 
-        $this->config = $this->applyConfigFileValuesToConfig($this->config, $configFilePath);
+        $this->config = $this->applyConfigFileValuesToConfig($this->config);
 
         $this->config = $this->applyEnvironmentValuesToConfig($this->config);
 
         $this->stopIfEmptyConfigParameter();
+    }
+
+    public static function getDefaultConfFilename(): string
+    {
+        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . self::DEFAULT_CONF_FILENAME;
     }
 
     private function getDefaultConfig(): array
@@ -43,12 +54,18 @@ class Config implements ConfigInterface
         ];
     }
 
-    private function applyConfigFileValuesToConfig(array $config, ?string $configFilePath = null): array
+    private function applyConfigFileValuesToConfig(array $config): array
     {
+        // /home/username/.tcms.conf
+        $configFilePath = self::getDefaultConfFilename();
+
         if (!$configFilePath || !is_file($configFilePath)) {
-            return $config;
+            // fallback to /etc/tcms.conf
+            $configFilePath = '/etc/tcms.conf';
+            if (!is_file($configFilePath)) {
+                return $config;
+            }
         }
-        
         printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
 
         $configFileValues = parse_ini_file($configFilePath, true, INI_SCANNER_TYPED);

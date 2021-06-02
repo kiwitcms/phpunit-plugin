@@ -19,9 +19,8 @@ class PHPUnitTestListener implements TestListener
 
     public function __construct()
     {
-        $configFilePath = getcwd() . DIRECTORY_SEPARATOR . '.tcms.conf';
         try {
-            $config = new Config($configFilePath);
+            $config = new Config();
         } catch (ConfigException $e) {
             printf($e->getMessage());
             exit(1);
