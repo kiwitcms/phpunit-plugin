@@ -82,7 +82,7 @@ class TestPlan extends BaseModel
 
     public function setPlanId(int $value)
     {
-        $this->planId = $value;
+        $this->id = $value;
     }
 
     public function getCreateDate(): ?DateTime

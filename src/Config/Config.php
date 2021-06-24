@@ -45,13 +45,17 @@ class Config implements ConfigInterface
 
     private function applyConfigFileValuesToConfig(array $config, ?string $configFilePath = null): array
     {
-        printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
-
         if (!$configFilePath || !is_file($configFilePath)) {
             return $config;
         }
+        
+        printf("%s: Loading configuration from %s...\n", $this->pluginName, realpath($configFilePath));
 
         $configFileValues = parse_ini_file($configFilePath, true, INI_SCANNER_TYPED);
+
+        if (empty($configFileValues)) {
+            return $config;
+        }
 
         foreach ($config as $key => $value) {
             if (!isset($configFileValues['tcms'][$key])) {
