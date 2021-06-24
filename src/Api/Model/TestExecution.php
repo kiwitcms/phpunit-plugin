@@ -7,10 +7,10 @@ use KiwiTcmsPhpUnitPlugin\Api\Model\BaseModel;
 class TestExecution extends BaseModel
 {
 
-	/**
-	 * @var int
-	 */
-	private $id;
+    /**
+     * @var int
+     */
+    private $id;
 
     /**
      * @var int
@@ -32,21 +32,21 @@ class TestExecution extends BaseModel
      */
     private $statusId;
 
-	/**
-	 * @return int
-	 */
-	public function getId(): int
-	{
-		return $this->id;
-	}
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
 
-	/**
-	 * @param int $id
-	 */
-	public function setId(int $id): void
-	{
-		$this->id = $id;
-	}
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
 
     public function getRunId(): ?int
     {
