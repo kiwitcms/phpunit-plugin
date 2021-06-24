@@ -75,7 +75,7 @@ class TestRun extends BaseModel
 
     public function setRunId(int $value)
     {
-        $this->runId = $value;
+        $this->id = $value;
     }
 
     public function getProductVersionId(): ?int

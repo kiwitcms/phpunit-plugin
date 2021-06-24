@@ -2,13 +2,12 @@ language: php
 
 php:
   - 7.2
-  - 7.3
 
 install:
-  - composer install
+  - composer self-update --rollback && composer install
 
 script:
-- ./vendor/bin/phpunit
+- ./vendor/bin/phpunit tests/
 
 notifications:
   email:
