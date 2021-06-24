@@ -38,7 +38,7 @@ class Build extends BaseModel
 
     public function setBuildId(int $value)
     {
-        $this->buildId = $value;
+        $this->id = $value;
     }
 
     public function getName(): ?string
