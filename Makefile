@@ -8,6 +8,10 @@ cs:
 stan:
 	@vendor/bin/phpstan analyse
 
+.PHONY: test
+test:
+	@vendor/bin/phpunit tests/	
+
 
 .PHONY: help
 help:

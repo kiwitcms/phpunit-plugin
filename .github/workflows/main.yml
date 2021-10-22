@@ -40,3 +40,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run php-cs
         run: make cs
+
+      # Run unit tests and report to kiwi tcms using  
+      - name: Run unit tests
+        run: make test
