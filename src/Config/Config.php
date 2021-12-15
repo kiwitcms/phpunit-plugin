@@ -11,11 +11,6 @@ class Config implements ConfigInterface
     /**
      * @var string
      */
-    const DEFAULT_CONF_FILENAME = '.tcms.conf';
-
-    /**
-     * @var string
-     */
     private $pluginName;
 
     /**
@@ -38,7 +33,7 @@ class Config implements ConfigInterface
 
     public static function getDefaultConfFilename(): string
     {
-        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . self::DEFAULT_CONF_FILENAME;
+        return $_SERVER['HOME'] . DIRECTORY_SEPARATOR . '.tcms.conf';
     }
 
     private function getDefaultConfig(): array
