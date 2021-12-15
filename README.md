@@ -18,7 +18,7 @@ to your composer.json and execute
 composer require kiwitcms/phpunit-plugin
 ```
 
-#### 2. Create `.tcms.conf` with the following contents:
+#### 2. Create `~/.tcms.conf` with the following contents:
 
 ```
 [tcms]
