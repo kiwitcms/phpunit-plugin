@@ -19,6 +19,14 @@ class PHPUnitTestListener implements TestListener
 
     public function __construct()
     {
+        set_exception_handler(function ($exception) {
+            echo $exception->getMessage();
+            echo "\n";
+            echo $exception->getTraceAsString();
+            echo "\n";
+            throw $exception;
+        });
+
         try {
             $config = new Config();
         } catch (ConfigException $e) {

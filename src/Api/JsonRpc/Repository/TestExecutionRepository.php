@@ -64,7 +64,7 @@ class TestExecutionRepository extends BaseRepository
             'run_id' => $modelData['run']
         ]));
 
-        $result = $response->getRpcResult();
+        $result = $response->getRpcResult()[0];
 
         $newModel = $this->hydrateModel($result);
 
