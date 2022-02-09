@@ -9,7 +9,7 @@ class GuzzleJsonRpcClientFactory
 {
     public static function create(ConfigInterface $config, array $headers = []): GuzzleJsonRpcClient
     {
-        $jsonRpcUrl = rtrim($config->getUrl(), "/") . '/json-rpc/';
+        $jsonRpcUrl = str_replace('xml-rpc', 'json-rpc', $config->getUrl());
 
         $guzzleJsonRpcClient = GuzzleJsonRpcClient::factory($jsonRpcUrl, [
             'verify' => true,
