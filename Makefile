@@ -11,7 +11,7 @@ stan:
 
 .PHONY: phpunit
 phpunit:
-	@vendor/bin/phpunit --coverage-clover coverage.xml
+	@vendor/bin/phpunit --coverage-clover coverage.xml --whitelist src/
 
 
 .PHONY: help
