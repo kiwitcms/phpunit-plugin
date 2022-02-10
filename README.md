@@ -68,4 +68,3 @@ Distributed under the terms of the [`GNU GPL v3.0`](http://www.gnu.org/licenses/
 ### Issues
 
 If you encounter any problems, please [file an issue](https://github.com/kiwitcms/phpunit-plugin/issues) along with a detailed description.
-
