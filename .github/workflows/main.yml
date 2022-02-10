@@ -57,3 +57,9 @@ jobs:
           export TCMS_BUILD=$(echo $GITHUB_SHA | cut -c1-7)
 
           make phpunit
+
+      - name: Send coverage to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          fail_ci_if_error: true
+          files: coverage.xml
