@@ -31,6 +31,16 @@ product_version =
 build =
 
 ```
+The filename `~/.tcms.conf` is expanded to something like `/home/tcms-bot/.tcms.conf` on Linux 
+and `C:\Users\tcms-bot\.tcms.conf` on Windows, where tcms-bot is the username on the local computer.
+
+It’s also possible to provide system-wide config in `/etc/tcms.conf`, which is valid only on Linux!
+On Windows it would be `C:\tcms.conf`.
+
+Execute the following command to find the exact location on your system:
+```
+php configFilePath.php
+```
 
 Set the appropriate values.
 

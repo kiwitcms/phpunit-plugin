@@ -56,7 +56,7 @@ class Config implements ConfigInterface
 
         if (!$configFilePath || !is_file($configFilePath)) {
             // fallback to /etc/tcms.conf
-            $configFilePath = '/etc/tcms.conf';
+            $configFilePath = $this->getFallBackConfigPath();
             if (!is_file($configFilePath)) {
                 return $config;
             }
@@ -145,6 +145,15 @@ class Config implements ConfigInterface
             $fullMsg = sprintf("%s: %s %s\n", $this->pluginName, implode(', ', $parametersNotSet), $msg);
             throw new ConfigException($fullMsg);
         }
+    }
+
+    private function getFallBackConfigPath(): string
+    {
+        if (strtolower(PHP_OS) === 'linux') {
+            return '/etc/tcms.conf';
+        }
+
+        return 'C:\tcms.conf';
     }
 
     public function getUrl(): string
