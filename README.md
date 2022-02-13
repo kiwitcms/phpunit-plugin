@@ -31,7 +31,7 @@ product_version =
 build =
 
 ```
-The filename `~/.tcms.conf` is expanded to something like `/home/tcms-bot/.tcms.conf` on Linux 
+The filename `~/.tcms.conf` is expanded to something like `/home/tcms-bot/.tcms.conf` on Linux
 and `C:\Users\tcms-bot\.tcms.conf` on Windows, where tcms-bot is the username on the local computer.
 
 It’s also possible to provide system-wide config in `/etc/tcms.conf`, which is valid only on Linux!
