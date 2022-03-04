@@ -125,9 +125,9 @@ class Client implements ClientInterface
      */
     private $classification;
 
-    private int $priorityId;
+    private $priorityId;
 
-    private int $caseStatusId;
+    private $caseStatusId;
 
     public function __construct(
         GuzzleJsonRpcClient $client,
@@ -231,7 +231,7 @@ class Client implements ClientInterface
         return $classification;
     }
 
-    public function getPriorityId(): int
+    public function getPriorityId()
     {
         $response = $this->client->send($this->client->request(123, 'Priority.filter', [['id__gt' => 0]]));
         $result = $response->getRpcResult();
@@ -242,9 +242,12 @@ class Client implements ClientInterface
         return $result[0]['id'];
     }
 
-    public function getConfirmedCaseStatusId(): int
+    public function getConfirmedCaseStatusId()
     {
-        $response = $this->client->send($this->client->request(123, 'TestCaseStatus.filter', [['name' => 'CONFIRMED']]));
+        $response = $this->client->send(
+            $this->client->request(123, 'TestCaseStatus.filter', [['name' => 'CONFIRMED']])
+        );
+
         $result = $response->getRpcResult();
         if (empty($result)) {
             throw new ClientException(sprintf("Missing TestCaseStatus"));
@@ -374,7 +377,6 @@ class Client implements ClientInterface
             $testCase->setCaseStatusId($this->caseStatusId);
             $testCase->setIsAutomated(true);
             $testCase->setPriorityId($this->priorityId);
-            $testCase->setAuthorId(1);
 
             $this->testResults[$testResultId] = [
                 'testCase' => $testCase,
