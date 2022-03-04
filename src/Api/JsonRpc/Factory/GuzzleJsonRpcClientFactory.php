@@ -3,11 +3,11 @@
 namespace KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory;
 
 use Graze\GuzzleHttp\JsonRpc\Client as GuzzleJsonRpcClient;
-use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
+use KiwiTcmsPhpUnitPlugin\Config\Config;
 
 class GuzzleJsonRpcClientFactory
 {
-    public static function create(ConfigInterface $config, array $headers = []): GuzzleJsonRpcClient
+    public static function create(Config $config, array $headers = []): GuzzleJsonRpcClient
     {
         $jsonRpcUrl = str_replace('xml-rpc', 'json-rpc', $config->getUrl());
 

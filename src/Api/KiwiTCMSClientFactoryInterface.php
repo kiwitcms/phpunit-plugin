@@ -3,9 +3,9 @@
 namespace KiwiTcmsPhpUnitPlugin\Api;
 
 use KiwiTcmsPhpUnitPlugin\Api\ClientInterface;
-use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
+use KiwiTcmsPhpUnitPlugin\Config\Config;
 
 interface KiwiTCMSClientFactoryInterface
 {
-    public static function create(ConfigInterface $config) : ClientInterface;
+    public static function create(Config $config) : ClientInterface;
 }
