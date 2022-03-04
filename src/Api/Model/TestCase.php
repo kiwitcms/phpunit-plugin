@@ -75,11 +75,6 @@ class TestCase extends BaseModel
     /**
      * @var int
      */
-    private $author;
-
-    /**
-     * @var int
-     */
     private $defaultTesterId;
 
     /**
@@ -244,16 +239,6 @@ class TestCase extends BaseModel
     public function setPriorityId(int $value)
     {
         $this->priorityId = $value;
-    }
-
-    public function getAuthorId(): ?int
-    {
-        return $this->author;
-    }
-
-    public function setAuthorId(int $value)
-    {
-        $this->author = $value;
     }
 
     public function getDefaultTesterId(): ?int
