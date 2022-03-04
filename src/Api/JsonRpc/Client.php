@@ -125,6 +125,8 @@ class Client implements ClientInterface
      */
     private $classification;
 
+    private int $priorityId;
+
     public function __construct(
         GuzzleJsonRpcClient $client,
         ConfigInterface $config,
@@ -195,6 +197,8 @@ class Client implements ClientInterface
             $this->category = $this->getFirstProductCategoryOrFail();
             $this->testRun = $this->createTestRun();
         }
+
+        $this->priorityId = $this->getPriorityId();
     }
 
     public function finish(): void
@@ -222,6 +226,17 @@ class Client implements ClientInterface
         }
 
         return $classification;
+    }
+
+    public function getPriorityId(): int
+    {
+        $response = $this->client->send($this->client->request(123, 'Priority.filter', [['id__gt' => 0]]));
+        $result = $response->getRpcResult();
+        if (empty($result)) {
+            throw new ClientException(sprintf("Missing Priority"));
+        }
+
+        return $result[0]['id'];
     }
 
     public function getProductOrCreate(): Product
@@ -344,7 +359,7 @@ class Client implements ClientInterface
             $testCase->setSummary($summary);
             $testCase->setCaseStatusId(2);
             $testCase->setIsAutomated(true);
-            $testCase->setPriorityId(1);
+            $testCase->setPriorityId($this->priorityId);
             $testCase->setAuthorId(1);
 
             $this->testResults[$testResultId] = [
