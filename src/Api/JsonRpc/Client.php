@@ -6,7 +6,7 @@ use Graze\GuzzleHttp\JsonRpc\Client as GuzzleJsonRpcClient;
 use KiwiTcmsPhpUnitPlugin\Api\ClientInterface;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ClassificationRepository;
 use KiwiTcmsPhpUnitPlugin\Api\Model\Classification;
-use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
+use KiwiTcmsPhpUnitPlugin\Config\Config;
 use KiwiTcmsPhpUnitPlugin\Api\ClientException;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ProductRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ProductVersionRepository;
@@ -36,7 +36,7 @@ class Client implements ClientInterface
     private $client;
 
     /**
-     * @var ConfigInterface
+     * @var Config
      */
     private $config;
 
@@ -127,7 +127,7 @@ class Client implements ClientInterface
 
     public function __construct(
         GuzzleJsonRpcClient $client,
-        ConfigInterface $config,
+        Config $config,
         ProductRepository $productRepository,
         ProductVersionRepository $productVersionRepository,
         TestPlanRepository $testPlanRepository,

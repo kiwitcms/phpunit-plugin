@@ -2,10 +2,9 @@
 
 namespace KiwiTcmsPhpUnitPlugin\Config;
 
-use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
 use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 
-class Config implements ConfigInterface
+class Config
 {
 
     /**

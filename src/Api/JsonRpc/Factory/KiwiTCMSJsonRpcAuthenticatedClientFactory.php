@@ -6,7 +6,7 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ClassificationRepository;
 use KiwiTcmsPhpUnitPlugin\Api\KiwiTCMSClientFactoryInterface;
 use KiwiTcmsPhpUnitPlugin\Api\ClientInterface;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Client;
-use KiwiTcmsPhpUnitPlugin\Config\ConfigInterface;
+use KiwiTcmsPhpUnitPlugin\Config\Config;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory\GuzzleJsonRpcClientFactory;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ProductRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\ProductVersionRepository;
@@ -21,7 +21,7 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\UserRepository;
 class KiwiTCMSJsonRpcAuthenticatedClientFactory implements KiwiTCMSClientFactoryInterface
 {
 
-    public static function create(ConfigInterface $config): ClientInterface
+    public static function create(Config $config): ClientInterface
     {
         $guzzleJsonRpcClient = GuzzleJsonRpcClientFactory::create($config);
 
