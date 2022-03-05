@@ -45,11 +45,6 @@ class TestPlan extends BaseModel
     /**
      * @var int
      */
-    private $authorId;
-
-    /**
-     * @var int
-     */
     private $productId;
 
     /**
@@ -133,16 +128,6 @@ class TestPlan extends BaseModel
     public function setText(string $value)
     {
         $this->text = $value;
-    }
-
-    public function getAuthorId(): ?int
-    {
-        return $this->authorId;
-    }
-
-    public function setAuthorId(int $value)
-    {
-        $this->authorId = $value;
     }
 
     public function getTags(): array
