@@ -23,25 +23,6 @@ class TestExecutionRepository extends BaseRepository
         ]);
     }
 
-    public function findByTestCaseIdAndTestRunId(int $testCaseId, int $testRunId): array
-    {
-        $response = $this->client->send($this->client->request(123, 'TestExecution.filter', [(object) [
-            'case_id' => $testCaseId,
-            'run_id' => $testRunId,
-        ]]));
-
-        /** @var Response $response */
-        $result = $response->getRpcResult();
-
-        $testExecutions = [];
-
-        foreach ($result as $testExecution) {
-            $testExecutions[] = $this->hydrateModel($testExecution);
-        }
-
-        return $testExecutions;
-    }
-
     public function updateStatus(int $testExecutionId, int $statusId)
     {
         /** @var Response $response */
