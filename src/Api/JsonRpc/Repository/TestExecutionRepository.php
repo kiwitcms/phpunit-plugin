@@ -23,7 +23,7 @@ class TestExecutionRepository extends BaseRepository
         ]);
     }
 
-    public function findByTestCaseIdAndTestRunId(int $testCaseId, int $testRunId): ?TestExecution
+    public function findByTestCaseIdAndTestRunId(int $testCaseId, int $testRunId): array
     {
         $response = $this->client->send($this->client->request(123, 'TestExecution.filter', [(object) [
             'case_id' => $testCaseId,
@@ -32,11 +32,14 @@ class TestExecutionRepository extends BaseRepository
 
         /** @var Response $response */
         $result = $response->getRpcResult();
-        if (empty($result)) {
-            return null;
+
+        $testExecutions = [];
+
+        foreach ($result as $testExecution) {
+            $testExecutions[] = $this->hydrateModel($testExecution);
         }
 
-        return $this->hydrateModel($result[0]);
+        return $testExecutions;
     }
 
     public function updateStatus(int $testExecutionId, int $statusId)
@@ -54,7 +57,7 @@ class TestExecutionRepository extends BaseRepository
         return $this->hydrateModel($result);
     }
 
-    public function create(TestExecution $model): TestExecution
+    public function create(TestExecution $model): array
     {
         $modelData = $this->exportModel($model);
 
@@ -64,11 +67,14 @@ class TestExecutionRepository extends BaseRepository
             'run_id' => $modelData['run']
         ]));
 
-        $result = $response->getRpcResult()[0];
+        $result = $response->getRpcResult();
+        $testExecutions = [];
 
-        $newModel = $this->hydrateModel($result);
+        foreach ($result as $testExecution) {
+            $testExecutions[] = $this->hydrateModel($testExecution);
+        }
 
-        return $newModel;
+        return $testExecutions;
     }
 
     public function addComment(int $testExecutionId, string $comment)
