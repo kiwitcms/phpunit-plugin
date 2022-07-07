@@ -2,11 +2,11 @@ parameters:
 	level:	max
 	paths:
 		-	%rootDir%/../../../src
-	excludes_analyse:
+	excludePaths:
 		-	%rootDir%/vendor
 	ignoreErrors:
 		-
-			message: '#Cannot call method getRpcResult\(\) on Graze\\GuzzleHttp\\JsonRpc\\Message\\ResponseInterface|null.#'
+			message: '#Cannot call method getRpcResult\(\) on Graze\\GuzzleHttp\\JsonRpc\\Message\\ResponseInterface\|null.#'
 			path: %currentWorkingDirectory%/src/Api/JsonRpc/Factory/KiwiTCMSJsonRpcAuthenticatedClientFactory.php
 
 		-
