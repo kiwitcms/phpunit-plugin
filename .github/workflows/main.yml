@@ -18,6 +18,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        kiwitcms-url: [public.tenant.kiwitcms.org, tcms.kiwitcms.org]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -44,11 +47,11 @@ jobs:
       - name: Prepare ~/.tcms.conf
         run: |
           echo "[tcms]" > ~/.tcms.conf
-          echo "url = https://tcms.kiwitcms.org/xml-rpc/" >> ~/.tcms.conf
+          echo "url = https://${{ matrix.kiwitcms-url }}/xml-rpc/" >> ~/.tcms.conf
           echo "username = kiwitcms-bot" >> ~/.tcms.conf
           echo "password = ${{ secrets.TCMS_PASSWORD }}" >> ~/.tcms.conf
 
-      - name: Execute test suite and report to Kiwi TCMS
+      - name: Execute test suite and report to ${{ matrix.kiwitcms-url }}
         run: |
           export TCMS_PRODUCT=$GITHUB_REPOSITORY
           # branch name or pull/123
