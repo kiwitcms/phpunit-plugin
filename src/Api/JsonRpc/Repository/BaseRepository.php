@@ -3,10 +3,10 @@
 namespace KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository;
 
 use Graze\GuzzleHttp\JsonRpc\Client as GuzzleJsonRpcClient;
-use Zend\Hydrator\ReflectionHydrator;
-use Zend\Hydrator\NamingStrategy\UnderscoreNamingStrategy;
-use Zend\Hydrator\NamingStrategy\CompositeNamingStrategy;
-use Zend\Hydrator\NamingStrategy\MapNamingStrategy;
+use Laminas\Hydrator\NamingStrategy\CompositeNamingStrategy;
+use Laminas\Hydrator\NamingStrategy\MapNamingStrategy;
+use Laminas\Hydrator\NamingStrategy\UnderscoreNamingStrategy;
+use Laminas\Hydrator\ReflectionHydrator;
 
 class BaseRepository
 {

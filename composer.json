@@ -4,7 +4,7 @@
     "require": {
         "graze/guzzle-jsonrpc": "^3.2",
         "phpunit/phpunit": "^9.5",
-        "zendframework/zend-hydrator": "^3.0"
+        "laminas/laminas-hydrator": "^4.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.8",
