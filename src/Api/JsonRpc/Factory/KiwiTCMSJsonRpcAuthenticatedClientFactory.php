@@ -20,7 +20,6 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\UserRepository;
 
 class KiwiTCMSJsonRpcAuthenticatedClientFactory implements KiwiTCMSClientFactoryInterface
 {
-
     public static function create(Config $config): ClientInterface
     {
         $guzzleJsonRpcClient = GuzzleJsonRpcClientFactory::create($config);

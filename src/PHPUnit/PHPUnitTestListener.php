@@ -1,4 +1,5 @@
 <?php
+
 namespace KiwiTcmsPhpUnitPlugin\PHPUnit;
 
 use PHPUnit\Framework\TestListener;
@@ -9,7 +10,6 @@ use PHPUnit\Framework\Warning;
 use KiwiTcmsPhpUnitPlugin\Config\Config;
 use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 use KiwiTcmsPhpUnitPlugin\Api\ClientException;
-
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Factory\KiwiTCMSJsonRpcAuthenticatedClientFactory;
 
 class PHPUnitTestListener implements TestListener

@@ -29,7 +29,6 @@ use KiwiTcmsPhpUnitPlugin\Api\Model\Category;
 
 class Client implements ClientInterface
 {
-
     /**
      * @var GuzzleJsonRpcClient
      */

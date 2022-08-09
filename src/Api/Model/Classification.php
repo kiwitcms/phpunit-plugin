@@ -2,7 +2,6 @@
 
 namespace KiwiTcmsPhpUnitPlugin\Api\Model;
 
-
 class Classification extends BaseModel
 {
     /**

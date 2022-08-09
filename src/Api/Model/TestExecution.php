@@ -6,7 +6,6 @@ use KiwiTcmsPhpUnitPlugin\Api\Model\BaseModel;
 
 class TestExecution extends BaseModel
 {
-
     /**
      * @var int
      */

@@ -7,5 +7,5 @@ use KiwiTcmsPhpUnitPlugin\Config\Config;
 
 interface KiwiTCMSClientFactoryInterface
 {
-    public static function create(Config $config) : ClientInterface;
+    public static function create(Config $config): ClientInterface;
 }
