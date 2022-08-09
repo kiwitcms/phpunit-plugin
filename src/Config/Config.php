@@ -6,7 +6,6 @@ use KiwiTcmsPhpUnitPlugin\Config\ConfigException;
 
 class Config
 {
-
     /**
      * @var string
      */

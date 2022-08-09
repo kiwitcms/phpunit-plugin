@@ -10,7 +10,7 @@ class ConfigTest extends TestCase
 {
     private $origEnv;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->origEnv = getenv();
@@ -22,7 +22,7 @@ class ConfigTest extends TestCase
         });
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
         foreach ($this->origEnv as $envKey => $envVal) {
@@ -60,16 +60,16 @@ class ConfigTest extends TestCase
     public function testMissingConfigApiUrl()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*url..*/');
+        $this->expectExceptionMessageMatches('/.*url..*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_api_url.conf');
 
-        new Config('tests/fixtures/configuration/missing_api_url.conf');
+        new Config();
     }
 
     public function testMissingConfigUsername()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*username.*/');
+        $this->expectExceptionMessageMatches('/.*username.*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_username.conf');
 
         new Config();
@@ -78,7 +78,7 @@ class ConfigTest extends TestCase
     public function testMissingConfigPassword()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*password.*/');
+        $this->expectExceptionMessageMatches('/.*password.*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_password.conf');
 
         new Config();
@@ -87,7 +87,7 @@ class ConfigTest extends TestCase
     public function testMissingConfigProduct()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*product.*/');
+        $this->expectExceptionMessageMatches('/.*product.*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_product.conf');
 
         new Config();
@@ -96,7 +96,7 @@ class ConfigTest extends TestCase
     public function testMissingConfigProductVersion()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*product_version.*/');
+        $this->expectExceptionMessageMatches('/.*product_version.*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_product_version.conf');
 
         new Config();
@@ -105,7 +105,7 @@ class ConfigTest extends TestCase
     public function testMissingConfigBuild()
     {
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/.*build.*/');
+        $this->expectExceptionMessageMatches('/.*build.*/');
         $this->createConfigFile('tests/fixtures/configuration/missing_build.conf');
 
         new Config();
@@ -141,7 +141,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_API_URL=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?url).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?url).*$/');
 
         new Config();
     }
@@ -150,7 +150,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_USERNAME=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?username).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?username).*$/');
 
         new Config();
     }
@@ -159,7 +159,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_PASSWORD=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?password).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?password).*$/');
 
         new Config();
     }
@@ -168,7 +168,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_PRODUCT=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product,).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product,).*$/');
 
         new Config();
     }
@@ -177,7 +177,7 @@ class ConfigTest extends TestCase
     {
         putenv('TRAVIS_REPO_SLUG=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product,).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product,).*$/');
 
         new Config();
     }
@@ -186,7 +186,7 @@ class ConfigTest extends TestCase
     {
         putenv('JOB_NAME=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product,).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product,).*$/');
 
         new Config();
     }
@@ -195,7 +195,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_PRODUCT_VERSION=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product_version).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product_version).*$/');
 
         new Config();
     }
@@ -204,7 +204,7 @@ class ConfigTest extends TestCase
     {
         putenv('TRAVIS_COMMIT=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product_version).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product_version).*$/');
 
         new Config();
     }
@@ -213,7 +213,7 @@ class ConfigTest extends TestCase
     {
         putenv('TRAVIS_PULL_REQUEST_SHA=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product_version).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product_version).*$/');
 
         new Config();
     }
@@ -222,7 +222,7 @@ class ConfigTest extends TestCase
     {
         putenv('GIT_COMMIT=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?product_version).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?product_version).*$/');
 
         new Config();
     }
@@ -231,7 +231,7 @@ class ConfigTest extends TestCase
     {
         putenv('TCMS_BUILD=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?build).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?build).*$/');
 
         new Config();
     }
@@ -240,7 +240,7 @@ class ConfigTest extends TestCase
     {
         putenv('TRAVIS_BUILD_NUMBER=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?build).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?build).*$/');
 
         new Config();
     }
@@ -249,7 +249,7 @@ class ConfigTest extends TestCase
     {
         putenv('BUILD_NUMBER=something');
         $this->expectException(ConfigException::class);
-        $this->expectExceptionMessageRegExp('/^(?!.*?build).*$/');
+        $this->expectExceptionMessageMatches('/^(?!.*?build).*$/');
 
         new Config();
     }

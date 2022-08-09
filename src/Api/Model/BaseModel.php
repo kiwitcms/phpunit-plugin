@@ -4,5 +4,4 @@ namespace KiwiTcmsPhpUnitPlugin\Api\Model;
 
 class BaseModel
 {
-
 }
