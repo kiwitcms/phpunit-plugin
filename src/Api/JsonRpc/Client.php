@@ -316,7 +316,7 @@ class Client implements ClientInterface
 
         $testPlan = new TestPlan();
         $testPlan->setProductId($this->product->getId());
-        $testPlan->setTypeId(1);
+        $testPlan->setTypeId($this->testPlanRepository->getPlanTypeId());
         $testPlan->setProductVersionId($productVersion->getId());
         $testPlan->setText("WIP");
 

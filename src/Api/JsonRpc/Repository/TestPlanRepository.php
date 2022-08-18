@@ -65,4 +65,19 @@ class TestPlanRepository extends BaseRepository
 
         return $this->hydrateModel($result[0]);
     }
+
+    public function getPlanTypeId(): ?int
+    {
+        $response = $this->client->send($this->client->request(123, 'PlanType.filter', [(object)[
+            'name' => 'Unit'
+        ]]));
+
+        /** @var Response $response */
+        $result = $response->getRpcResult();
+        if (empty($result)) {
+            return null;
+        }
+
+        return $result[0]['id'];
+    }
 }

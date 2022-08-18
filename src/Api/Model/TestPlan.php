@@ -165,7 +165,7 @@ class TestPlan extends BaseModel
         return $this->typeId;
     }
 
-    public function setTypeId(int $value)
+    public function setTypeId(?int $value)
     {
         $this->typeId = $value;
     }
