@@ -66,4 +66,19 @@ class TestExecutionRepository extends BaseRepository
             'comment' => $comment
         ]));
     }
+
+    public function getTestExecutionStatues(): array
+    {
+        /** @var Response $response */
+        $response = $this->client->send($this->client->request(123, 'TestExecutionStatus.filter', [['id__gt' => 0]]));
+
+        $result = $response->getRpcResult();
+        $testExecutionStatuses = [];
+
+        foreach ($result as $testExecutionStatus) {
+            $testExecutionStatuses[strtolower($testExecutionStatus['name'])] = $testExecutionStatus;
+        }
+
+        return $testExecutionStatuses;
+    }
 }

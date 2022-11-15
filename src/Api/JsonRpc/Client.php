@@ -128,6 +128,8 @@ class Client implements ClientInterface
 
     private $caseStatusId;
 
+    private array $testExecutionStatus;
+
     public function __construct(
         GuzzleJsonRpcClient $client,
         Config $config,
@@ -201,6 +203,7 @@ class Client implements ClientInterface
 
         $this->priorityId = $this->getPriorityId();
         $this->caseStatusId = $this->getConfirmedCaseStatusId();
+        $this->testExecutionStatus = $this->testExecutionRepository->getTestExecutionStatues();
     }
 
     public function finish(): void
@@ -447,23 +450,10 @@ class Client implements ClientInterface
 
     private function getCaseRunStatusIdByResult(string $result): int
     {
-        switch ($result) {
-            case "PASS":
-                return 4;
-
-            case "FAIL":
-            case "WARNING":
-                return 5;
-
-            case "ERROR":
-                return 7;
-
-            case "INCOMPLETE":
-            case "RISKY":
-            case "SKIPPED":
-                return 8;
+        if (isset($this->testExecutionStatus[$result])) {
+            return (int) $this->testExecutionStatus[$result]['id'];
         }
 
-        return 7;
+        return $this->testExecutionStatus['error']['id'];
     }
 }
