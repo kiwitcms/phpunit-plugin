@@ -37,7 +37,7 @@ class TestPlanRepository extends BaseRepository
         $response = $this->client->send($this->client->request(123, 'TestPlan.create', [(object) $modelData]));
 
         $result = $response->getRpcResult();
-        var_dump($result);
+
         $newModel = $this->hydrateModel($result);
 
         return $newModel;
