@@ -16,7 +16,6 @@ use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\BuildRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestCaseRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\CategoryRepository;
 use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\TestExecutionRepository;
-use KiwiTcmsPhpUnitPlugin\Api\JsonRpc\Repository\UserRepository;
 use KiwiTcmsPhpUnitPlugin\Api\Model\ProductVersion;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestPlan;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestRun;
@@ -24,7 +23,6 @@ use KiwiTcmsPhpUnitPlugin\Api\Model\Build;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestExecution;
 use KiwiTcmsPhpUnitPlugin\Api\Model\TestCase;
 use KiwiTcmsPhpUnitPlugin\Api\Model\Product;
-use KiwiTcmsPhpUnitPlugin\Api\Model\User;
 use KiwiTcmsPhpUnitPlugin\Api\Model\Category;
 
 class Client implements ClientInterface
@@ -85,11 +83,6 @@ class Client implements ClientInterface
     private $classificationRepository;
 
     /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
      * @var array
      */
     private $testResults;
@@ -103,11 +96,6 @@ class Client implements ClientInterface
      * @var Product
      */
     private $product;
-
-    /**
-     * @var User
-     */
-    private $user;
 
     /**
      * @var Category
@@ -141,7 +129,6 @@ class Client implements ClientInterface
         TestCaseRepository $testCaseRepository,
         CategoryRepository $categoryRepository,
         TestExecutionRepository $testExecutionRepository,
-        UserRepository $userRepository,
         ClassificationRepository $classificationRepository
     ) {
         $this->client = $client;
@@ -155,7 +142,6 @@ class Client implements ClientInterface
         $this->testCaseRepository = $testCaseRepository;
         $this->categoryRepository = $categoryRepository;
         $this->testExecutionRepository = $testExecutionRepository;
-        $this->userRepository = $userRepository;
         $this->classificationRepository = $classificationRepository;
 
         $this->testResults = [];
@@ -168,8 +154,6 @@ class Client implements ClientInterface
 
     public function init(): void
     {
-        $this->user = $this->getUserOrFail();
-
         if (!empty($this->config->getTestRunId())) {
             $testRun = $this->testRunRepository->findById($this->config->getTestRunId());
 
@@ -210,17 +194,6 @@ class Client implements ClientInterface
     {
         $this->addTestResultsToTestRun();
         $this->logout();
-    }
-
-    public function getUserOrFail(): User
-    {
-        $user = $this->userRepository->findByUsername($this->config->getUsername());
-
-        if (empty($user)) {
-            throw new ClientException("User not found!");
-        }
-
-        return $user;
     }
 
     public function getClassification(): Classification
@@ -337,7 +310,8 @@ class Client implements ClientInterface
         $testRun = new TestRun();
         $testRun->setBuildId($build->getBuildId());
         $testRun->setPlanId($testPlan->getPlanId());
-        $testRun->setManagerId($this->user->getId());
+        $testRun->setManagerId($testPlan->getAuthor());
+        $testRun->setDefaultTesterId($testPlan->getAuthor());
         $testRun->setSummary('Automated test run ' . date('Y-m-d H:i:s'));
 
         return $this->testRunRepository->create($testRun);

@@ -62,6 +62,11 @@ class TestPlan extends BaseModel
      */
     private $tags;
 
+    /**
+     * @var int
+     */
+    private $author;
+
     public function __construct()
     {
         $this->createDate = new DateTime();
@@ -178,5 +183,21 @@ class TestPlan extends BaseModel
     public function setParentId(int $value)
     {
         $this->parentId = $value;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAuthor(): int
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param int $author
+     */
+    public function setAuthor(int $author): void
+    {
+        $this->author = $author;
     }
 }
