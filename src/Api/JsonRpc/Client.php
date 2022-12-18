@@ -356,7 +356,7 @@ class Client implements ClientInterface
 
             $this->testResults[$testResultId] = [
                 'testCase' => $testCase,
-                'testExecutionStatusId' => $this->getCaseRunStatusIdByResult($result),
+                'testExecutionStatusId' => $this->getTestExecutionStatusIdByResult($result),
                 'testExecutionTime' => $executionTime,
                 'testExecutionText' => $text,
             ];
@@ -422,12 +422,34 @@ class Client implements ClientInterface
         }
     }
 
-    private function getCaseRunStatusIdByResult(string $result): int
+    private function getTestExecutionStatusIdByResult(string $result): int
     {
         if (isset($this->testExecutionStatus[$result])) {
             return (int) $this->testExecutionStatus[$result]['id'];
         }
 
-        return $this->testExecutionStatus['error']['id'];
+        // order test executions by weight
+        uasort($this->testExecutionStatus, function ($status1, $status2) {
+            return $status1['weight'] > $status2['weight'];
+        });
+
+
+        // this should not happen as BE will prevent it
+        if (strtolower($result) === 'pass') {
+            $positiveWeights = array_filter($this->testExecutionStatus, fn($status): bool => $status['weight'] > 0);
+
+            // get the test execution with the highest weight
+            $testExecution = array_shift($positiveWeights);
+            return (int) $testExecution['id'];
+        }
+
+        if (strtolower($result) === 'fail') {
+            $negativeWeights = array_filter($this->testExecutionStatus, fn($status): bool => $status['weight'] < 0);
+
+            $testExecution = array_pop($negativeWeights);
+            return (int) $testExecution['id'];
+        }
+
+        throw new \Exception(sprintf('Unsupported test result: %s', $result));
     }
 }
