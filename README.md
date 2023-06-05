@@ -8,11 +8,11 @@
 ## Configuration and environment
 
 #### 1. Install package
-Add
-```
-"minimum-stability": "dev",
-```
-to your composer.json and execute
+
+The preferred method of installation is via [`Composer`](https://getcomposer.org/). Run the following
+command to install the package and add it as a requirement to your project's
+`composer.json`:
+
 
 ```
 composer require kiwitcms/phpunit-plugin
